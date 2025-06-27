@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kamera - Raspberry Pi</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            overflow: hidden; /* Wyłącz scroll */
+            display: flex;
+            flex-direction: column;
+        }
+        
+.btn-warning {
+    background: linear-gradient(45deg, #ff9800, #f57c00);
+}
+
+.btn-success {
+    background: linear-gradient(45deg, #4caf50, #388e3c);
+}
+
+.photo-delete {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    background: rgba(255, 0, 0, 0.8);
+    color: white;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.photo-delete:hover {
+    background: rgba(255, 0, 0, 1);
+    transform: scale(1.1);
+}
+
+        .header {
+            flex-shrink: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 40px;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            position: relative;
+        }
+        
+        .header-content {
+            display: contents;
+        }
+        
+        .header-logo img {
+            width: 300px;
+            height: auto;
+            align-items: left;
+        }
+        
+        .header-nav {
+            display: flex;
+            gap: 15px;
+            align-items: right;
+        }
+        
+        .user-info {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .main-content {
+            flex: 1;
+            display: flex;
+            padding: 20px;
+            gap: 20px;
+            min-height: 0;
+            align-items: flex-start;
+            justify-content: center;
+        }
+        
+        .camera-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+            max-width: 1200px;
+        }
+        
+        .camera-feed {
+            flex: 1;
+            background: transparent;
+            border-radius: 20px;
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 500px;
+            border: 3px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .camera-feed.offline {
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(15px);
+        }
+        
+        .camera-feed img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: cover;
+            border-radius: 17px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+        
+        .camera-overlay-top-left {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            backdrop-filter: blur(10px);
+            z-index: 10;
+        }
+        
+        .camera-overlay-top-right {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            z-index: 10;
+        }
+        
+        .camera-placeholder {
+            color: #ccc;
+            text-align: center;
+            font-size: 1.2rem;
+            background: transparent;
+            padding: 40px;
+            border-radius: 17px;
+            border: 2px dashed rgba(255, 255, 255, 0.3);
+            font-weight: 500;
+        }
+        
+        .camera-status-bar {
+            display: none;
+        }
+        
+        .controls-panel {
+            width: 320px;
+            flex-shrink: 0;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            align-self: flex-start;
+            height: fit-content;
+            min-height: 500px;
+        }
+        
+        .controls-section {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .controls-section h3 {
+            margin: 0 0 10px 0;
+            font-size: 1.1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            padding-bottom: 5px;
+        }
+        
+        .btn {
+            background: linear-gradient(45deg, #5c9ce6, #5c9ce6);
+            border: none;
+            color: white;
+            padding: 12px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+        
+        .btn-danger {
+            background: linear-gradient(45deg, #424242, #424242);
+        }
+        
+        .photos-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+        }
+        
+        .photos-grid {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            overflow: visible;
+            flex: 1;
+            padding-right: 5px;
+        }
+        
+        .photo-single {
+            position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+            aspect-ratio: 4/3;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+            width: 120px;
+            height: 90px;
+        }
+        
+        .photo-single:hover {
+            transform: scale(1.05);
+        }
+        
+        .photo-single img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .photo-badge {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-size: 10px;
+            font-weight: bold;
+        }
+        
+        .photo-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 2px 4px;
+            font-size: 9px;
+            text-align: center;
+        }
+        
+        .camera-status {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+            backdrop-filter: blur(10px);
+        }
+        
+        .camera-online {
+            background: rgba(33, 75, 214, 0.8);
+            color: white;
+            border: 1px solid rgba(33, 75, 214, 0.3);
+        }
+        
+        .camera-offline {
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        /* Gallery Modal */
+        .gallery-modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.9);
+            backdrop-filter: blur(5px);
+        }
+        
+        .gallery-modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .gallery-content {
+            position: relative;
+            max-width: 90%;
+            max-height: 90%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .gallery-image {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            border-radius: 10px;
+        }
+        
+        .gallery-close {
+            position: absolute;
+            top: -40px;
+            right: 0;
+            color: white;
+            font-size: 30px;
+            font-weight: bold;
+            cursor: pointer;
+            background: rgba(0,0,0,0.5);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .gallery-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            color: white;
+            font-size: 30px;
+            font-weight: bold;
+            cursor: pointer;
+            background: rgba(0,0,0,0.5);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            user-select: none;
+        }
+        
+        .gallery-prev {
+            left: -60px;
+        }
+        
+        .gallery-next {
+            right: -60px;
+        }
+        
+        .gallery-info {
+            position: absolute;
+            bottom: -50px;
+            left: 0;
+            right: 0;
+            color: white;
+            text-align: center;
+            background: rgba(0,0,0,0.5);
+            padding: 10px;
+            border-radius: 5px;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+                padding: 10px;
+            }
+            
+            .controls-panel {
+                width: 100%;
+                order: -1;
+            }
+            
+            .header {
+                flex-direction: column;
+                gap: 10px;
+                text-align: center;
+            }
+            
+            body {
+                overflow: auto;
+            }
+            
+            .camera-feed {
+                min-height: 250px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .gallery-nav {
+                font-size: 20px;
+                width: 40px;
+                height: 40px;
+            }
+            
+            .gallery-prev {
+                left: -45px;
+            }
+            
+            .gallery-next {
+                right: -45px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <div class="header-logo">
+                <img src="{{ url_for('static', filename='LOGO.png') }}" alt="Gingerity Logo">
+            </div>
+            <div class="header-nav">
+                <!-- <span>👤 <strong id="camera-user">--</strong></span> -->
+                <a href="/" class="btn">🏠 Dashboard</a>
+                <a href="/cam/logout" class="btn btn-danger">🚪 Wyloguj</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="main-content">
+        <div class="camera-container">
+            <div class="camera-feed offline">
+                <div class="camera-overlay-top-left">📹 Live Stream</div>
+                <div class="camera-overlay-top-right">
+                    <span id="camera-status" class="camera-status camera-offline">Offline</span>
+                </div>
+                <img id="camera-stream" src="#" alt="Camera stream" style="display: none;">
+                <div id="camera-placeholder" class="camera-placeholder">
+                    Stream jest offline.
+                </div>
+            </div>
+        </div>
+        
+        <div class="controls-panel">
+<div class="controls-section">
+    <h3>🎮 Sterowanie</h3>
+    <button class="btn" onclick="startStream()">▶️ Start Stream</button>
+    <button class="btn btn-danger" onclick="stopStream()">⏹️ Stop Stream</button>
+    <button class="btn" onclick="takePhoto()">📸 Zrób zdjęcie</button>
+    <button class="btn" onclick="refreshPhotos()">🔄 Odśwież</button>
+    
+    <!-- NOWE PRZYCISKI -->
+    <div style="border-top: 1px solid rgba(255,255,255,0.2); margin: 15px 0; padding-top: 15px;">
+        <h4>⚡ Zarządzanie kamerą</h4>
+        <button class="btn btn-warning" onclick="disableCamera()">🔌 Wyłącz kamerę</button>
+        <button class="btn btn-success" onclick="enableCamera()">🔌 Włącz kamerę</button>
+    </div>
+</div>
+            
+            <div class="photos-section">
+                <h3>📊 Zdjęcia</h3>
+                <div class="photos-grid" id="photos-grid">
+                    <!-- Zdjęcia będą tutaj -->
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Gallery Modal -->
+    <div class="gallery-modal" id="gallery-modal">
+        <div class="gallery-content">
+            <span class="gallery-close" onclick="closeGallery()">&times;</span>
+            <span class="gallery-nav gallery-prev" onclick="prevImage()">&#8249;</span>
+            <img class="gallery-image" id="gallery-image" src="" alt="">
+            <span class="gallery-nav gallery-next" onclick="nextImage()">&#8250;</span>
+            <div class="gallery-info" id="gallery-info">
+                <div id="gallery-filename">--</div>
+                <div id="gallery-details">-- | --</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let streamActive = false;
+        let currentPhotos = [];
+        let currentPhotoIndex = 0;
+        
+        function updateUserInfo() {
+            fetch('/api/system')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('camera-user').textContent = data.camera_user || 'Nieznany';
+                })
+                .catch(console.error);
+        }
+        
+        function startStream() {
+            const img = document.getElementById('camera-stream');
+            const placeholder = document.getElementById('camera-placeholder');
+            const status = document.getElementById('camera-status');
+            
+            img.src = '/cam/stream?' + Date.now();
+            img.style.display = 'block';
+            placeholder.style.display = 'none';
+            status.textContent = 'Online';
+            status.className = 'camera-status camera-online';
+            streamActive = true;
+        }
+        
+        function stopStream() {
+            const img = document.getElementById('camera-stream');
+            const placeholder = document.getElementById('camera-placeholder');
+            const status = document.getElementById('camera-status');
+            
+            fetch('/cam/stop_stream');
+            img.style.display = 'none';
+            placeholder.style.display = 'block';
+            status.textContent = 'Offline';
+            status.className = 'camera-status camera-offline';
+            streamActive = false;
+        }
+        
+        function takePhoto() {
+            fetch('/cam/photo', {method: 'POST'})
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        showNotification('✅ Zdjęcie zapisane: ' + data.filename);
+                        refreshPhotos();
+                    } else {
+                        showNotification('❌ Błąd: ' + data.error);
+                    }
+                })
+                .catch(error => {
+                    showNotification('❌ Błąd połączenia: ' + error);
+                });
+        }
+        
+      function refreshPhotos() {
+    fetch('/cam/photos')
+        .then(response => response.json())
+        .then(photos => {
+            currentPhotos = photos;
+            const grid = document.getElementById('photos-grid');
+            grid.innerHTML = '';
+            
+            if (photos.length > 0) {
+                // Pokaż tylko ostatnie zdjęcie z przyciskiem usuwania
+                const latestPhoto = photos[0];
+                const div = document.createElement('div');
+                div.className = 'photo-single';
+                
+                const badge = photos.length > 1 ? `<div class="photo-badge">+${photos.length - 1}</div>` : '';
+                
+                div.innerHTML = `
+                    <img src="${latestPhoto.path}" alt="${latestPhoto.filename}" onclick="openGallery(0)">
+                    ${badge}
+                    <div class="photo-info">
+                        ${latestPhoto.size} KB
+                    </div>
+                    <div class="photo-delete" onclick="deletePhoto('${latestPhoto.filename}', event)">
+                        🗑️
+                    </div>
+                `;
+                grid.appendChild(div);
+            } else {
+                grid.innerHTML = '<div style="color: #999; text-align: center; font-size: 12px;">Brak zdjęć</div>';
+            }
+        })
+        .catch(error => {
+            console.error('Błąd pobierania zdjęć:', error);
+        });
+}
+
+function deletePhoto(filename, event) {
+    event.stopPropagation(); // Nie otwieraj galerii
+    
+    if (confirm(`Czy na pewno chcesz usunąć zdjęcie ${filename}?`)) {
+        fetch('/cam/delete_photo', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({filename: filename})
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showNotification('✅ ' + data.message);
+                refreshPhotos(); // Odśwież listę
+            } else {
+                showNotification('❌ ' + data.error);
+            }
+        })
+        .catch(error => {
+            showNotification('❌ Błąd usuwania: ' + error);
+        });
+    }
+}
+        
+        function openGallery(index) {
+    if (!currentPhotos.length) return;
+    
+    currentPhotoIndex = index;
+    const modal = document.getElementById('gallery-modal');
+    const img = document.getElementById('gallery-image');
+    const filename = document.getElementById('gallery-filename');
+    const details = document.getElementById('gallery-details');
+    
+    const photo = currentPhotos[currentPhotoIndex];
+    img.src = photo.path;
+    filename.textContent = photo.filename;
+    details.innerHTML = `
+        ${photo.size} KB | ${photo.date} 
+        <button onclick="deletePhotoFromGallery('${photo.filename}')" 
+                style="margin-left: 10px; background: #ff4444; border: none; color: white; padding: 2px 8px; border-radius: 3px; cursor: pointer;">
+            🗑️ Usuń
+        </button>
+    `;
+    
+    modal.classList.add('active');
+    document.addEventListener('keydown', handleGalleryKeydown);
+    modal.addEventListener('click', handleGalleryClick);
+}
+
+function deletePhotoFromGallery(filename) {
+    if (confirm(`Czy na pewno chcesz usunąć ${filename}?`)) {
+        fetch('/cam/delete_photo', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({filename: filename})
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showNotification('✅ ' + data.message);
+                closeGallery();
+                refreshPhotos();
+            } else {
+                showNotification('❌ ' + data.error);
+            }
+        });
+    }
+}
+        
+        function closeGallery() {
+            const modal = document.getElementById('gallery-modal');
+            modal.classList.remove('active');
+            document.removeEventListener('keydown', handleGalleryKeydown);
+            modal.removeEventListener('click', handleGalleryClick);
+        }
+        
+        function prevImage() {
+            if (currentPhotoIndex > 0) {
+                openGallery(currentPhotoIndex - 1);
+            }
+        }
+        
+        function nextImage() {
+            if (currentPhotoIndex < currentPhotos.length - 1) {
+                openGallery(currentPhotoIndex + 1);
+            }
+        }
+        
+        function handleGalleryKeydown(e) {
+            if (e.key === 'Escape') closeGallery();
+            if (e.key === 'ArrowLeft') prevImage();
+            if (e.key === 'ArrowRight') nextImage();
+        }
+        
+        function handleGalleryClick(e) {
+            if (e.target === document.getElementById('gallery-modal')) {
+                closeGallery();
+            }
+        }
+        
+        function showNotification(message) {
+            // Prosty toast notification
+            const toast = document.createElement('div');
+            toast.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: rgba(0,0,0,0.8);
+                color: white;
+                padding: 15px 20px;
+                border-radius: 8px;
+                z-index: 1001;
+                font-size: 14px;
+                max-width: 300px;
+                word-wrap: break-word;
+            `;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.remove();
+            }, 3000);
+        }
+
+        function disableCamera() {
+    if (confirm('Czy na pewno chcesz wyłączyć kamerę systemowo?\nBędzie wymagany restart systemu aby ją ponownie włączyć.')) {
+        // Zatrzymaj stream najpierw
+        stopStream();
+        
+        fetch('/cam/disable_camera', {method: 'POST'})
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showNotification('⚡ ' + data.message);
+                } else {
+                    showNotification('❌ ' + data.error);
+                }
+            })
+            .catch(error => {
+                showNotification('❌ Błąd: ' + error);
+            });
+    }
+}
+
+function enableCamera() {
+    fetch('/cam/enable_camera', {method: 'POST'})
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showNotification('⚡ ' + data.message);
+                // Odczekaj chwilę i sprawdź status
+                setTimeout(() => {
+                    location.reload(); // Przeładuj stronę
+                }, 3000);
+            } else {
+                showNotification('❌ ' + data.error);
+            }
+        })
+        .catch(error => {
+            showNotification('❌ Błąd: ' + error);
+        });
+}
+        
+        // Inicjalizacja
+        updateUserInfo();
+        refreshPhotos();
+        setInterval(refreshPhotos, 30000);
+    </script>
+</body>
+</html>

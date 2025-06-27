@@ -1,0 +1,195 @@
+
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GINGERITY.space</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+<img src="{{ url_for('static', filename='LOGO.png') }}" width="400px">
+        </div>
+        
+        <!-- Sekcja kamery -->
+<div class="grid">
+    <div class="card">
+         <h3>📹 Kamera</h3> 
+        <p>
+            
+        </p>
+        <p>
+     
+        </p>
+        <!-- <a href="/cam">🔐 Przejdź do kamery</a>  -->
+    </div>
+    
+    <!-- Pozostałe karty (Procesor, RAM, Dysk, System) -->
+    <div class="card">...</div>
+    <!-- itd. -->
+</div>
+            
+            <!-- <div class="card">
+                <h3>🎮 Sterowanie</h3>
+                <div class="camera-controls">
+                    <button class="btn" onclick="startStream()">▶️ Start Stream</button>
+                    <button class="btn btn-danger" onclick="stopStream()">⏹️ Stop Stream</button>
+                    <button class="btn" onclick="takePhoto()">📸 Zrób zdjęcie</button>
+                    <button class="btn" onclick="refreshPhotos()">🔄 Odśwież zdjęcia</button>
+                </div>
+                
+                <div style="margin-top: 20px;">
+                    <h4>📊 Ostatnie zdjęcia</h4>
+                    <div class="photos-grid" id="photos-grid">
+                        <!-- Zdjęcia będą tutaj -->
+                    </div>
+                </div>
+            </div>
+        </div> -->
+        
+        <!-- Istniejące metryki systemu -->
+        <div class="grid">
+            <div class="card">
+                <h3>Procesor</h3>
+                <div class="metric">
+                    <span>Użycie CPU:</span>
+                    <span id="cpu-percent">--%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="cpu-bar"></div>
+                </div>
+                <div class="metric">
+                    <span>Temperatura:</span>
+                    <span id="cpu-temp">--°C</span>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h3>RAM</h3>
+                <div class="metric">
+                    <span>Użyte:</span>
+                    <span id="memory-used">-- GB</span>
+                </div>
+                <div class="metric">
+                    <span>Całkowita:</span>
+                    <span id="memory-total">-- GB</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="memory-bar"></div>
+                </div>
+                <div class="metric">
+                    <span>Użycie:</span>
+                    <span id="memory-percent">--%</span>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h3>💾 Dysk</h3>
+                <div class="metric">
+                    <span>Użyte:</span>
+                    <span id="disk-used">-- GB</span>
+                </div>
+                <div class="metric">
+                    <span>Całkowita:</span>
+                    <span id="disk-total">-- GB</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="disk-bar"></div>
+                </div>
+                <div class="metric">
+                    <span>Użycie:</span>
+                    <span id="disk-percent">--%</span>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h3>⏱️ System</h3>
+                <div class="metric">
+                    <span>Czas działania:</span>
+                    <span id="uptime">--</span>
+                </div>
+                <div class="metric">
+                    <span>Ostatnia aktualizacja:</span>
+                    <span id="timestamp">--</span>
+                </div>
+                <div class="metric">
+                    <span>Status kamery:</span>
+                    <span id="camera-system-status">--</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="status">
+            Status połączenia: <span id="connection-status">🟢 Połączony</span>
+        </div>
+    </div>
+
+<script>
+// Dodaj na koniec skryptu
+document.addEventListener('DOMContentLoaded', function() {
+    // Znajdź kartę kamery i dodaj kliknięcie
+    const cameraCard = document.querySelector('.card'); // Dostosuj selektor
+    if (cameraCard && cameraCard.querySelector('h3').textContent.includes('Kamera')) {
+        cameraCard.classList.add('camera-card');
+        cameraCard.addEventListener('click', function() {
+            window.location.href = '/cam';
+        });
+    }
+});
+</script>
+
+<script>
+function updateDashboard() {
+    fetch('/api/system')
+        .then(response => response.json())
+        .then(data => {
+            // CPU
+            if(document.getElementById('cpu-percent')) {
+                document.getElementById('cpu-percent').textContent = data.cpu_percent + '%';
+                document.getElementById('cpu-bar').style.width = data.cpu_percent + '%';
+                document.getElementById('cpu-temp').textContent = data.temperature + '°C';
+            }
+            
+            // RAM
+            if(document.getElementById('memory-used')) {
+                document.getElementById('memory-used').textContent = data.memory.used + ' GB';
+                document.getElementById('memory-total').textContent = data.memory.total + ' GB';
+                document.getElementById('memory-percent').textContent = data.memory.percent + '%';
+                document.getElementById('memory-bar').style.width = data.memory.percent + '%';
+            }
+            
+            // Dysk
+            if(document.getElementById('disk-used')) {
+                document.getElementById('disk-used').textContent = data.disk.used + ' GB';
+                document.getElementById('disk-total').textContent = data.disk.total + ' GB';
+                document.getElementById('disk-percent').textContent = data.disk.percent + '%';
+                document.getElementById('disk-bar').style.width = data.disk.percent + '%';
+            }
+            
+            // System
+            if(document.getElementById('uptime')) {
+                document.getElementById('uptime').textContent = data.uptime;
+                document.getElementById('timestamp').textContent = data.timestamp;
+            }
+            
+            // Status
+            if(document.getElementById('connection-status')) {
+                document.getElementById('connection-status').innerHTML = '🟢 Połączony';
+            }
+        })
+        .catch(error => {
+            console.error('Błąd:', error);
+            if(document.getElementById('connection-status')) {
+                document.getElementById('connection-status').innerHTML = '🔴 Błąd połączenia';
+            }
+        });
+}
+
+// KLUCZOWE - automatyczne odświeżanie
+updateDashboard();                  
+setInterval(updateDashboard, 1000); 
+</script>
+</body>
+</html>

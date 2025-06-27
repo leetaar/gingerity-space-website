@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logowanie - Kamera</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .header {
+            flex-shrink: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 40px;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            position: relative;
+        }
+        
+        .header-content {
+            display: contents;
+        }
+        
+        .header-logo img {
+            width: 300px;
+            height: auto;
+            align-items: left;
+        }
+        
+        .header-nav {
+            display: flex;
+            gap: 15px;
+            align-items: right;
+        }
+        
+        .btn {
+            padding: 8px 16px;
+            background: linear-gradient(45deg, #5c9ce6, #5c9ce6);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(92, 156, 230, 0.4);
+        }
+        
+        .btn-danger {
+            background: linear-gradient(45deg, #424242, #424242);
+        }
+        
+        .main-content {
+            flex: 1;
+            display: flex;
+            padding: 20px;
+            gap: 20px;
+            min-height: 0;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .login-container {
+            width: 320px;
+            flex-shrink: 0;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            height: fit-content;
+        }
+        
+        .camera-placeholder-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+            max-width: 1200px;
+            justify-content: center;
+        }
+        
+        .camera-placeholder-box {
+            flex: 1;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 400px;
+            position: relative;
+        }
+        
+        .camera-overlay-top-left {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            backdrop-filter: blur(10px);
+        }
+        
+        .camera-overlay-top-right {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+        }
+        
+        .camera-status {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+            backdrop-filter: blur(10px);
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .access-message {
+            color: #ccc;
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: 500;
+        }
+        
+        .login-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        
+        .login-header h2 {
+            margin: 0 0 10px 0;
+            font-size: 1.4rem;
+        }
+        
+        .login-header p {
+            margin: 0;
+            opacity: 0.8;
+            font-size: 0.9rem;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            font-size: 14px;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: none;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            font-size: 14px;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 0 0 2px rgba(92, 156, 230, 0.5);
+        }
+        
+        .form-group input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+        
+        .btn {
+            width: 100%;
+            padding: 12px 16px;
+            background: linear-gradient(45deg, #5c9ce6, #5c9ce6);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(92, 156, 230, 0.4);
+        }
+        
+        .flash-messages {
+            margin-bottom: 20px;
+        }
+        
+        .flash {
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            font-size: 13px;
+        }
+        
+        .flash.error {
+            background: rgba(244, 67, 54, 0.8);
+            color: white;
+        }
+        
+        .flash.success {
+            background: rgba(76, 175, 80, 0.8);
+            color: white;
+        }
+        
+        .flash.info {
+            background: rgba(33, 150, 243, 0.8);
+            color: white;
+        }
+        
+        .back-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .back-link a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            font-size: 13px;
+            transition: color 0.3s ease;
+        }
+        
+        .back-link a:hover {
+            color: rgba(255, 255, 255, 0.9);
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+                padding: 15px;
+                align-items: center;
+            }
+            
+            .login-container {
+                width: 100%;
+                max-width: 400px;
+                margin: 0;
+            }
+            
+            .camera-placeholder-area {
+                margin-bottom: 20px;
+            }
+            
+            /* .header-logo img {
+                width: 150px;
+            } */
+            
+            .header-nav {
+                gap: 5px;
+            }
+            
+            .camera-placeholder-box {
+                min-height: 200px;
+            }
+            
+            body {
+                overflow: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <div class="header-logo">
+                <img src="{{ url_for('static', filename='LOGO.png') }}" alt="Gingerity Logo">
+            </div>
+            <div class="header-nav">
+                <a href="/" class="btn">🏠 Dashboard</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="main-content">
+        <div class="camera-placeholder-area">
+            <div class="camera-placeholder-box">
+                <div class="camera-overlay-top-left">📹 Live Stream</div>
+                <div class="camera-overlay-top-right">
+                    <span class="camera-status">Offline</span>
+                </div>
+                <div class="access-message">
+                    🔐 Zaloguj się aby uzyskać dostęp do kamery
+                </div>
+            </div>
+        </div>
+        
+        <div class="login-container">
+            <div class="login-header">
+                <h2>🔒 Dostęp do kamery</h2>
+                <p>Wprowadź dane logowania</p>
+            </div>
+            
+            <div class="flash-messages">
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="flash {{ category }}">{{ message }}</div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+            </div>
+            
+            <form method="POST">
+                <div class="form-group">
+                    <label for="username">👤 Użytkownik:</label>
+                    <input type="text" id="username" name="username" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">🔑 Hasło:</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                
+                <button type="submit" class="btn">🔓 Zaloguj się do kamery</button>
+            </form>
+            
+            <div class="back-link">
+                <a href="/">← Powrót do dashboardu</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

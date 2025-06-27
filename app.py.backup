@@ -1,0 +1,198 @@
+from flask import Flask, render_template, jsonify, Response, request
+import psutil
+import subprocess
+import json
+import os
+import time
+from datetime import datetime
+import threading
+
+app = Flask(__name__)
+
+# Katalog na zdjęcia
+PHOTOS_DIR = "/home/marcin/dashboard/static/photos"
+os.makedirs(PHOTOS_DIR, exist_ok=True)
+
+# Zmienne dla streamu
+streaming = False
+stream_process = None
+
+def get_system_info():
+    """Pobiera informacje o systemie"""
+    return {
+        'cpu_percent': psutil.cpu_percent(interval=1),
+        'memory': {
+            'total': round(psutil.virtual_memory().total / (1024**3), 2),
+            'used': round(psutil.virtual_memory().used / (1024**3), 2),
+            'percent': psutil.virtual_memory().percent
+        },
+        'disk': {
+            'total': round(psutil.disk_usage('/').total / (1024**3), 2),
+            'used': round(psutil.disk_usage('/').used / (1024**3), 2),
+            'percent': round((psutil.disk_usage('/').used / psutil.disk_usage('/').total) * 100, 2)
+        },
+        'temperature': get_cpu_temperature(),
+        'uptime': get_uptime(),
+        'timestamp': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+        'camera_status': check_camera_status()
+    }
+
+def get_cpu_temperature():
+    """Pobiera temperaturę CPU"""
+    try:
+        result = subprocess.run(['vcgencmd', 'measure_temp'], capture_output=True, text=True)
+        temp = result.stdout.strip().replace('temp=', '').replace("'C", '')
+        return float(temp)
+    except:
+        return 0
+
+def get_uptime():
+    """Pobiera czas działania systemu"""
+    try:
+        with open('/proc/uptime', 'r') as f:
+            uptime_seconds = float(f.readline().split()[0])
+        days = int(uptime_seconds // 86400)
+        hours = int((uptime_seconds % 86400) // 3600)
+        minutes = int((uptime_seconds % 3600) // 60)
+        return f"{days}d {hours}h {minutes}m"
+    except:
+        return "Nieznany"
+
+def check_camera_status():
+    """Sprawdza czy kamera jest dostępna"""
+    try:
+        result = subprocess.run(['libcamera-hello', '--list-cameras'], 
+                              capture_output=True, text=True, timeout=5)
+        return 'Available cameras' in result.stdout
+    except:
+        return False
+
+def generate_mjpeg_stream():
+    """Generator MJPEG streamu z libcamera"""
+    global streaming, stream_process
+    
+    while streaming:
+        try:
+            # Uruchom libcamera-still do zrobienia zdjęcia
+            result = subprocess.run([
+                'libcamera-still', 
+                '--output', '-',  # Wyjście na stdout
+                '--timeout', '1',  # Szybko
+                '--width', '640',
+                '--height', '480',
+                '--quality', '70'
+            ], capture_output=True, timeout=3)
+            
+            if result.returncode == 0 and result.stdout:
+                # Wyślij jako MJPEG frame
+                yield (b'--frame\r\n'
+                       b'Content-Type: image/jpeg\r\n\r\n' + result.stdout + b'\r\n')
+            else:
+                # Jeśli błąd, wyślij pustą ramkę
+                time.sleep(0.5)
+                
+        except Exception as e:
+            print(f"Błąd streamu: {e}")
+            break
+            
+        time.sleep(0.2)  # ~5 FPS
+
+@app.route('/')
+def dashboard():
+    """Strona główna dashboardu"""
+    return render_template('dashboard.html')
+
+@app.route('/api/system')
+def api_system():
+    """API endpoint zwracający dane systemowe"""
+    return jsonify(get_system_info())
+
+@app.route('/camera/stream')
+def camera_stream():
+    """Live stream z kamery"""
+    global streaming
+    streaming = True
+    return Response(generate_mjpeg_stream(),
+                   mimetype='multipart/x-mixed-replace; boundary=frame')
+
+@app.route('/camera/photo', methods=['POST'])
+def take_photo():
+    """Zrób zdjęcie"""
+    try:
+        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+        filename = f"photo_{timestamp}.jpg"
+        filepath = os.path.join(PHOTOS_DIR, filename)
+        
+        # Użyj libcamera-still do zrobienia zdjęcia
+        result = subprocess.run([
+            'libcamera-still',
+            '--output', filepath,
+            '--timeout', '2000',
+            '--width', '1920',
+            '--height', '1080'
+        ], capture_output=True, text=True, timeout=10)
+        
+        if result.returncode == 0:
+            # Sprawdź czy plik się utworzył
+            if os.path.exists(filepath):
+                file_size = os.path.getsize(filepath)
+                return jsonify({
+                    'success': True,
+                    'filename': filename,
+                    'filepath': f'/static/photos/{filename}',
+                    'size': round(file_size / 1024, 1)  # KB
+                })
+            else:
+                return jsonify({'error': 'Plik nie został utworzony'}), 500
+        else:
+            return jsonify({'error': f'Błąd kamery: {result.stderr}'}), 500
+            
+    except subprocess.TimeoutExpired:
+        return jsonify({'error': 'Timeout kamery'}), 500
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/camera/photos')
+def list_photos():
+    """Lista ostatnich zdjęć"""
+    try:
+        photos = []
+        for filename in sorted(os.listdir(PHOTOS_DIR), reverse=True)[:10]:
+            if filename.endswith('.jpg'):
+                filepath = os.path.join(PHOTOS_DIR, filename)
+                if os.path.exists(filepath):
+                    stat = os.stat(filepath)
+                    photos.append({
+                        'filename': filename,
+                        'path': f'/static/photos/{filename}',
+                        'size': round(stat.st_size / 1024, 1),  # KB
+                        'date': datetime.fromtimestamp(stat.st_mtime).strftime('%Y-%m-%d %H:%M:%S')
+                    })
+        return jsonify(photos)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/camera/stop_stream')
+def stop_stream():
+    """Zatrzymaj stream"""
+    global streaming, stream_process
+    streaming = False
+    if stream_process:
+        try:
+            stream_process.terminate()
+        except:
+            pass
+    return jsonify({'success': True})
+
+# Serwowanie plików statycznych (zdjęcia)
+@app.route('/static/photos/<path:filename>')
+def serve_photo(filename):
+    """Serwuj zdjęcia"""
+    return app.send_static_file(f'photos/{filename}')
+
+if __name__ == '__main__':
+    try:
+        app.run(host='0.0.0.0', port=5000, debug=False, threaded=True)
+    finally:
+        # Wyczyść zasoby
+        streaming = False
