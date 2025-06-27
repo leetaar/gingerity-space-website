@@ -1,4 +1,5 @@
 from flask import Flask, render_template, jsonify, Response, request, redirect, url_for, session, flash
+from werkzeug.security import check_password_hash # POPRAWIONY IMPORT
 import psutil
 import subprocess
 import os
@@ -107,7 +108,7 @@ def check_alerts(system_data):
             alerts.append({
                 'type': 'critical',
                 'title': 'KRYTYCZNE ZAPEŁNIENIE DYSKU',
-                'message': f'� Użycie dysku: {disk_percent}% (próg: {disk_crit}%)',
+                'message': f'🔥 Użycie dysku: {disk_percent}% (próg: {disk_crit}%)',
                 'value': disk_percent,
                 'threshold': disk_crit
             })
@@ -145,7 +146,6 @@ def send_alert(alert):
             print(f"🚨 ALERT: {alert['message']}")
             send_email_alert(alert)
             send_discord_alert(alert)
-            # send_telegram_alert(alert) # Odkomentuj i zdefiniuj tę funkcję, jeśli chcesz używać Telegrama
         except Exception as e:
             print(f"Błąd wysyłania alertu: {e}")
     
@@ -238,10 +238,7 @@ def send_discord_alert(alert):
     except Exception as e:
         print(f"❌ Discord alert failed: {e}")
 
-
-
-
-# Załaduj zmienne z .env (to miejsce jest OK)
+# Załaduj zmienne z .env
 load_dotenv()
 
 app = Flask(__name__)
@@ -271,14 +268,20 @@ os.makedirs(PHOTOS_DIR, exist_ok=True)
 streaming = False
 
 def verify_camera_password(username, password):
-    """Weryfikacja dostępu do kamery"""
-    return username in CAM_USERS and CAM_USERS[username] == password
+    """Weryfikacja dostępu do kamery przy użyciu hashy"""
+    if username not in CAM_USERS:
+        return False
+
+    # Pobierz zahashowane hasło z konfiguracji
+    hashed_password = CAM_USERS[username]
+
+    # Porównaj podane hasło z hashem
+    return check_password_hash(hashed_password, password)
 
 def camera_login_required(f):
     """Dekorator wymagający logowania do kamery"""
     def decorated_function(*args, **kwargs):
         if 'camera_logged_in' not in session or not session['camera_logged_in']:
-            # flash('Musisz się zalogować aby uzyskać dostęp do kamery', 'error')
             return redirect(url_for('camera_login'))
         return f(*args, **kwargs)
     decorated_function.__name__ = f.__name__
@@ -286,8 +289,7 @@ def camera_login_required(f):
 
 def get_system_info():
     """Pobiera informacje o systemie"""
-    
-    basic_info = { # Store info in a variable before returning
+    basic_info = {
         'cpu_percent': psutil.cpu_percent(interval=1),
         'memory': {
             'total': round(psutil.virtual_memory().total / (1024**3), 2),
@@ -307,13 +309,7 @@ def get_system_info():
         'camera_user': session.get('camera_user', '')
     }
 
-    # Sprawdź alerty w tle (nie blokuj API)
-    threading.Thread(target=lambda: check_alerts({
-        'temperature': basic_info['temperature'],
-        'cpu_percent': basic_info['cpu_percent'],
-        'memory': basic_info['memory'],
-        'disk': basic_info['disk']
-    })).start()
+    threading.Thread(target=lambda: check_alerts(basic_info.copy())).start()
     
     return basic_info
 
@@ -346,8 +342,6 @@ def check_camera_status():
         return 'Available cameras' in result.stdout
     except:
         return False
-    
-    
 
 def generate_mjpeg_stream():
     """Generator MJPEG z libcamera-vid - 2K wysoka jakość"""
@@ -372,13 +366,12 @@ def generate_mjpeg_stream():
         buffer = b''
         
         while streaming:
-            chunk = process.stdout.read(32768)  # Jeszcze większe chunki dla 2K
+            chunk = process.stdout.read(4096)
             if not chunk:
                 break
                 
             buffer += chunk
             
-            # Znajdź JPEG frames
             while True:
                 start = buffer.find(b'\xff\xd8')
                 if start == -1:
@@ -401,28 +394,22 @@ def generate_mjpeg_stream():
             process.terminate()
 
 # ===== PUBLICZNE ROUTES =====
-
 @app.route('/')
 def dashboard():
-    """Strona główna dashboardu - PUBLICZNA (bez kamery)"""
     return render_template('dashboard.html')
 
 @app.route('/api/system')
 def api_system():
-    """API systemowe - publiczne"""
     return jsonify(get_system_info())
 
 # ===== KAMERA - CHRONIONE ROUTES =====
-
 @app.route('/cam')
 @camera_login_required
 def camera():
-    """Strona kamery - CHRONIONA"""
     return render_template('camera.html')
 
 @app.route('/cam/login', methods=['GET', 'POST'])
 def camera_login():
-    """Logowanie do kamery"""
     if request.method == 'POST':
         username = request.form.get('username', '').strip()
         password = request.form.get('password', '').strip()
@@ -431,7 +418,6 @@ def camera_login():
             session['camera_logged_in'] = True
             session['camera_user'] = username
             session['camera_login_time'] = datetime.now().isoformat()
-            # flash(f'Zalogowano do kamery jako {username}', 'success')
             return redirect(url_for('camera'))
         else:
             flash('Nieprawidłowe dane logowania', 'error')
@@ -440,18 +426,14 @@ def camera_login():
 
 @app.route('/cam/logout')
 def camera_logout():
-    """Wylogowanie z kamery"""
-    username = session.get('camera_user', '')
     session.pop('camera_logged_in', None)
     session.pop('camera_user', None)
     session.pop('camera_login_time', None)
-    # flash(f'Wylogowano z kamery: {username}', 'info')
     return redirect(url_for('dashboard'))
 
 @app.route('/cam/stream')
 @camera_login_required
 def camera_stream():
-    """Live stream z kamery - CHRONIONY"""
     global streaming
     streaming = True
     return Response(generate_mjpeg_stream(),
@@ -460,14 +442,13 @@ def camera_stream():
 @app.route('/cam/photo', methods=['POST'])
 @camera_login_required
 def take_photo():
-    """Zrób zdjęcie - CHRONIONE - najwyższa jakość"""
     global streaming
     
     try:
-        # Zatrzymaj stream na chwilę
         was_streaming = streaming
-        streaming = False
-        time.sleep(0.5)
+        if was_streaming:
+            streaming = False
+            time.sleep(0.5)
         
         timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
         username = session.get('camera_user', 'unknown')
@@ -477,19 +458,15 @@ def take_photo():
         result = subprocess.run([
             'libcamera-still',
             '--output', filepath,
-            '--timeout', '3000',        # Więcej czasu na najwyższą jakość
-            '--width', '4608',          # Natywna rozdzielczość 12MP
-            '--height', '2592',         # Pełna rozdzielczość kamery
-            '--quality', '100',         # Maksymalna jakość JPEG
+            '--timeout', '3000',
+            '--width', str(CAMERA_WIDTH),
+            '--height', str(CAMERA_HEIGHT),
+            '--quality', str(CAMERA_QUALITY),
             '--encoding', 'jpg',
-            '--denoise', 'cdn_hq',      # Wysokiej jakości denoise
-            '--sharpness', '1.2',       # Lekkie wyostrzenie
-            '--contrast', '1.1',        # Lekkie zwiększenie kontrastu
-            '--saturation', '1.05',     # Lekkie nasycenie kolorów
+            '--denoise', 'cdn_hq',
             '--immediate'
         ], capture_output=True, text=True, timeout=15)
         
-        # Przywróć stream
         if was_streaming:
             streaming = True
         
@@ -504,19 +481,14 @@ def take_photo():
         else:
             return jsonify({'error': f'Błąd kamery: {result.stderr}'}), 500
             
-    except subprocess.TimeoutExpired:
-        if was_streaming:
-            streaming = True
-        return jsonify({'error': 'Timeout kamery - zdjęcie może być zbyt duże'}), 500
     except Exception as e:
-        if was_streaming:
+        if 'was_streaming' in locals() and was_streaming:
             streaming = True
         return jsonify({'error': str(e)}), 500
 
 @app.route('/cam/photos')
 @camera_login_required
 def list_photos():
-    """Lista ostatnich zdjęć - CHRONIONE"""
     try:
         photos = []
         for filename in sorted(os.listdir(PHOTOS_DIR), reverse=True)[:PHOTOS_MAX]:
@@ -527,7 +499,7 @@ def list_photos():
                     photos.append({
                         'filename': filename,
                         'path': f'/static/photos/{filename}',
-                        'size': round(stat.st_size / 1024, 1),  # KB
+                        'size': round(stat.st_size / 1024, 1),
                         'date': datetime.fromtimestamp(stat.st_mtime).strftime('%Y-%m-%d %H:%M:%S')
                     })
         return jsonify(photos)
@@ -537,115 +509,53 @@ def list_photos():
 @app.route('/cam/stop_stream')
 @camera_login_required
 def stop_stream():
-    """Zatrzymaj stream - CHRONIONE"""
     global streaming
     streaming = False
     return jsonify({'success': True})
 
-# ===== SERWOWANIE PLIKÓW STATYCZNYCH =====
-
-# Zdjęcia z kamery - CHRONIONE
-@app.route('/static/photos/<path:filename>')
-@camera_login_required
-def serve_photo(filename):
-    """Serwuj zdjęcia - CHRONIONE (tylko dla zalogowanych)"""
-    return app.send_static_file(f'photos/{filename}')
-
-# Inne pliki statyczne - PUBLICZNE (CSS, JS, logo itp.)
-@app.route('/static/<path:filename>')
-def serve_static(filename):
-    """Serwuj pliki statyczne - PUBLICZNE"""
-    # Zabezpieczenie przed dostępem do zdjęć przez ten route
-    if filename.startswith('photos/'):
-        return "Forbidden", 403
-    return app.send_static_file(filename)
-
 @app.route('/cam/delete_photo', methods=['POST'])
 @camera_login_required
 def delete_photo():
-    """Usuń zdjęcie - CHRONIONE"""
     try:
         filename = request.json.get('filename')
-        if not filename:
-            return jsonify({'error': 'Brak nazwy pliku'}), 400
-        
-        # Bezpieczeństwo - sprawdź czy to prawidłowy plik
-        if not filename.endswith('.jpg') or '/' in filename or '\\' in filename:
+        if not filename or not filename.endswith('.jpg') or '/' in filename or '\\' in filename:
             return jsonify({'error': 'Nieprawidłowa nazwa pliku'}), 400
         
         filepath = os.path.join(PHOTOS_DIR, filename)
         
-        # Sprawdź czy plik istnieje i usuń
         if os.path.exists(filepath):
             os.remove(filepath)
-            return jsonify({
-                'success': True,
-                'message': f'Zdjęcie {filename} zostało usunięte'
-            })
+            return jsonify({'success': True, 'message': f'Zdjęcie {filename} zostało usunięte'})
         else:
             return jsonify({'error': 'Plik nie istnieje'}), 404
             
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-
 @app.route('/cam/disable_camera', methods=['POST'])
 @camera_login_required
 def disable_camera():
-    """Wyłącz kamerę systemowo - CHRONIONE"""
     global streaming
     try:
-        # Zatrzymaj stream
         streaming = False
         time.sleep(1)
-        
-        # Wyłącz kamerę przez dtoverlay
-        result = subprocess.run([
-            'sudo', 'dtoverlay', '-r', 'imx708'
-        ], capture_output=True, text=True, timeout=10)
-        
-        # Alternatywnie - wyłącz przez vcgencmd
-        result2 = subprocess.run([
-            'sudo', 'vcgencmd', 'set_camera', '0'
-        ], capture_output=True, text=True, timeout=5)
-        
-        return jsonify({
-            'success': True,
-            'message': 'Kamera została wyłączona systemowo'
-        })
-        
+        subprocess.run(['sudo', 'dtoverlay', '-r', 'imx708'], timeout=10)
+        return jsonify({'success': True, 'message': 'Kamera została wyłączona systemowo'})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
 @app.route('/cam/enable_camera', methods=['POST'])
 @camera_login_required
 def enable_camera():
-    """Włącz kamerę systemowo - CHRONIONE"""
     try:
-        # Włącz kamerę przez dtoverlay
-        result = subprocess.run([
-            'sudo', 'dtoverlay', 'imx708'
-        ], capture_output=True, text=True, timeout=10)
-        
-        # Alternatywnie - włącz przez vcgencmd
-        result2 = subprocess.run([
-            'sudo', 'vcgencmd', 'set_camera', '1'
-        ], capture_output=True, text=True, timeout=5)
-        
-        return jsonify({
-            'success': True,
-            'message': 'Kamera została włączona - odczekaj chwilę'
-        })
-        
+        subprocess.run(['sudo', 'dtoverlay', 'imx708'], timeout=10)
+        return jsonify({'success': True, 'message': 'Kamera została włączona - odczekaj chwilę'})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
-    
-    
-# === TRASY TESTOWE (przeniesione przed if __name__ == '__main__':) ===
+
 @app.route('/test-alert')
 @camera_login_required
 def test_alert():
-    """Test alertów (tylko dla zalogowanych)"""
     test_alert = {
         'type': 'warning',
         'title': 'Test systemu alertów',
@@ -653,9 +563,21 @@ def test_alert():
         'value': '100',
         'threshold': '80'
     }
-    
     send_alert(test_alert)
     return jsonify({'success': True, 'message': 'Alert testowy wysłany!'})
+
+
+# ===== SERWOWANIE PLIKÓW =====
+@app.route('/static/photos/<path:filename>')
+@camera_login_required
+def serve_photo(filename):
+    return app.send_static_file(f'photos/{filename}')
+
+@app.route('/static/<path:filename>')
+def serve_static(filename):
+    if filename.startswith('photos/'):
+        return "Forbidden", 403
+    return app.send_static_file(filename)
 
 
 if __name__ == '__main__':
@@ -663,5 +585,4 @@ if __name__ == '__main__':
         debug_mode = os.getenv('DEBUG', 'False').lower() == 'true'
         app.run(host='0.0.0.0', port=5000, debug=debug_mode, threaded=True)
     finally:
-        # Wyczyść zasoby przy zamykaniu
         streaming = False
