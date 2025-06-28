@@ -1,0 +1,330 @@
+[2025-06-28 20:20:13Z INFO HostContext] No proxy settings were found based on environmental variables (http_proxy/https_proxy/HTTP_PROXY/HTTPS_PROXY)
+[2025-06-28 20:20:13Z INFO HostContext] Well known directory 'Bin': '/var/www/gingerity.space/actions-runner/bin'
+[2025-06-28 20:20:13Z INFO HostContext] Well known directory 'Root': '/var/www/gingerity.space/actions-runner'
+[2025-06-28 20:20:13Z INFO HostContext] Well known config file 'Credentials': '/var/www/gingerity.space/actions-runner/.credentials'
+[2025-06-28 20:20:13Z INFO HostContext] Well known directory 'Bin': '/var/www/gingerity.space/actions-runner/bin'
+[2025-06-28 20:20:13Z INFO HostContext] Well known directory 'Root': '/var/www/gingerity.space/actions-runner'
+[2025-06-28 20:20:13Z INFO HostContext] Well known config file 'Runner': '/var/www/gingerity.space/actions-runner/.runner'
+[2025-06-28 20:20:13Z INFO Listener] Runner is built for Linux (Arm64) - linux-arm64.
+[2025-06-28 20:20:13Z INFO Listener] RuntimeInformation: Debian GNU/Linux 12 (bookworm).
+[2025-06-28 20:20:13Z INFO Listener] Version: 2.325.0
+[2025-06-28 20:20:13Z INFO Listener] Commit: 71ed7cd46223bd5d61633445946813012b502d54
+[2025-06-28 20:20:13Z INFO Listener] Culture: en-GB
+[2025-06-28 20:20:13Z INFO Listener] UI Culture: en-GB
+[2025-06-28 20:20:13Z INFO HostContext] Well known directory 'Bin': '/var/www/gingerity.space/actions-runner/bin'
+[2025-06-28 20:20:13Z INFO HostContext] Well known directory 'Root': '/var/www/gingerity.space/actions-runner'
+[2025-06-28 20:20:13Z INFO Listener] Validating directory permissions for: '/var/www/gingerity.space/actions-runner'
+[2025-06-28 20:20:13Z INFO CommandLineParser] Parse
+[2025-06-28 20:20:13Z INFO CommandLineParser] Parsing 3 args
+[2025-06-28 20:20:13Z INFO CommandLineParser] parsing argument
+[2025-06-28 20:20:13Z INFO CommandLineParser] HasArgs: False
+[2025-06-28 20:20:13Z INFO CommandLineParser] Adding Command: run
+[2025-06-28 20:20:13Z INFO CommandLineParser] parsing argument
+[2025-06-28 20:20:13Z INFO CommandLineParser] HasArgs: True
+[2025-06-28 20:20:13Z INFO CommandLineParser] arg: startuptype
+[2025-06-28 20:20:13Z INFO CommandLineParser] parsing argument
+[2025-06-28 20:20:13Z INFO CommandLineParser] HasArgs: True
+[2025-06-28 20:20:13Z INFO CommandLineParser] Adding option 'startuptype': 'service'
+[2025-06-28 20:20:13Z INFO Listener] Arguments parsed
+[2025-06-28 20:20:13Z INFO Runner] ExecuteCommand
+[2025-06-28 20:20:13Z INFO ConfigurationStore] currentAssemblyLocation: /var/www/gingerity.space/actions-runner/bin/Runner.Listener.dll
+[2025-06-28 20:20:13Z INFO HostContext] Well known directory 'Bin': '/var/www/gingerity.space/actions-runner/bin'
+[2025-06-28 20:20:13Z INFO ConfigurationStore] binPath: /var/www/gingerity.space/actions-runner/bin
+[2025-06-28 20:20:13Z INFO HostContext] Well known directory 'Bin': '/var/www/gingerity.space/actions-runner/bin'
+[2025-06-28 20:20:13Z INFO HostContext] Well known directory 'Root': '/var/www/gingerity.space/actions-runner'
+[2025-06-28 20:20:13Z INFO ConfigurationStore] RootFolder: /var/www/gingerity.space/actions-runner
+[2025-06-28 20:20:13Z INFO HostContext] Well known directory 'Bin': '/var/www/gingerity.space/actions-runner/bin'
+[2025-06-28 20:20:13Z INFO HostContext] Well known directory 'Root': '/var/www/gingerity.space/actions-runner'
+[2025-06-28 20:20:13Z INFO HostContext] Well known config file 'Runner': '/var/www/gingerity.space/actions-runner/.runner'
+[2025-06-28 20:20:13Z INFO ConfigurationStore] ConfigFilePath: /var/www/gingerity.space/actions-runner/.runner
+[2025-06-28 20:20:13Z INFO HostContext] Well known directory 'Bin': '/var/www/gingerity.space/actions-runner/bin'
+[2025-06-28 20:20:13Z INFO HostContext] Well known directory 'Root': '/var/www/gingerity.space/actions-runner'
+[2025-06-28 20:20:13Z INFO HostContext] Well known config file 'MigratedRunner': '/var/www/gingerity.space/actions-runner/.runner_migrated'
+[2025-06-28 20:20:13Z INFO ConfigurationStore] MigratedConfigFilePath: /var/www/gingerity.space/actions-runner/.runner_migrated
+[2025-06-28 20:20:13Z INFO HostContext] Well known directory 'Bin': '/var/www/gingerity.space/actions-runner/bin'
+[2025-06-28 20:20:13Z INFO HostContext] Well known directory 'Root': '/var/www/gingerity.space/actions-runner'
+[2025-06-28 20:20:13Z INFO HostContext] Well known config file 'Credentials': '/var/www/gingerity.space/actions-runner/.credentials'
+[2025-06-28 20:20:13Z INFO ConfigurationStore] CredFilePath: /var/www/gingerity.space/actions-runner/.credentials
+[2025-06-28 20:20:13Z INFO HostContext] Well known directory 'Bin': '/var/www/gingerity.space/actions-runner/bin'
+[2025-06-28 20:20:13Z INFO HostContext] Well known directory 'Root': '/var/www/gingerity.space/actions-runner'
+[2025-06-28 20:20:13Z INFO HostContext] Well known config file 'MigratedCredentials': '/var/www/gingerity.space/actions-runner/.credentials_migrated'
+[2025-06-28 20:20:13Z INFO ConfigurationStore] MigratedCredFilePath: /var/www/gingerity.space/actions-runner/.credentials_migrated
+[2025-06-28 20:20:13Z INFO HostContext] Well known directory 'Bin': '/var/www/gingerity.space/actions-runner/bin'
+[2025-06-28 20:20:13Z INFO HostContext] Well known directory 'Root': '/var/www/gingerity.space/actions-runner'
+[2025-06-28 20:20:13Z INFO HostContext] Well known config file 'Service': '/var/www/gingerity.space/actions-runner/.service'
+[2025-06-28 20:20:13Z INFO ConfigurationStore] ServiceConfigFilePath: /var/www/gingerity.space/actions-runner/.service
+[2025-06-28 20:20:13Z INFO CommandSettings] Flag 'help': 'False'
+[2025-06-28 20:20:13Z INFO CommandSettings] Flag 'version': 'False'
+[2025-06-28 20:20:13Z INFO CommandSettings] Flag 'commit': 'False'
+[2025-06-28 20:20:13Z INFO CommandSettings] Flag 'check': 'False'
+[2025-06-28 20:20:13Z INFO CommandSettings] Command 'configure': 'False'
+[2025-06-28 20:20:13Z INFO CommandSettings] Command 'remove': 'False'
+[2025-06-28 20:20:13Z INFO CommandSettings] Command 'warmup': 'False'
+[2025-06-28 20:20:13Z INFO ConfigurationManager] LoadSettings
+[2025-06-28 20:20:13Z INFO ConfigurationStore] IsConfigured()
+[2025-06-28 20:20:13Z INFO ConfigurationStore] IsConfigured: True
+[2025-06-28 20:20:13Z INFO ConfigurationManager] Is configured: True
+[2025-06-28 20:20:13Z INFO ConfigurationStore] Read setting file: 394 chars
+[2025-06-28 20:20:13Z INFO ConfigurationManager] Settings Loaded
+[2025-06-28 20:20:13Z INFO ConfigurationStore] IsServiceConfigured()
+[2025-06-28 20:20:13Z INFO ConfigurationStore] IsServiceConfigured: True
+[2025-06-28 20:20:13Z INFO CommandSettings] Command 'run': 'True'
+[2025-06-28 20:20:13Z INFO ConfigurationStore] IsConfigured()
+[2025-06-28 20:20:13Z INFO ConfigurationStore] IsConfigured: True
+[2025-06-28 20:20:13Z INFO ConfigurationManager] Is configured: True
+[2025-06-28 20:20:13Z INFO Runner] Set runner startup type - Service
+[2025-06-28 20:20:13Z INFO CommandSettings] Flag 'once': 'False'
+[2025-06-28 20:20:13Z INFO CommandSettings] Flag 'once': 'False'
+[2025-06-28 20:20:13Z INFO Runner] RunAsync
+[2025-06-28 20:20:13Z INFO ConfigurationManager] LoadMigratedSettings
+[2025-06-28 20:20:13Z INFO ConfigurationStore] IsMigratedConfigured()
+[2025-06-28 20:20:13Z INFO ConfigurationStore] IsMigratedConfigured: False
+[2025-06-28 20:20:13Z INFO Runner] Failed to load migrated settings: No migrated configuration found.
+[2025-06-28 20:20:13Z INFO Runner] Falling back to original .runner settings
+[2025-06-28 20:20:13Z INFO Runner] Using BrokerMessageListener
+[2025-06-28 20:20:13Z INFO BrokerMessageListener] Using provided settings
+[2025-06-28 20:20:13Z INFO BrokerMessageListener] {
+  "AgentId": 2,
+  "AgentName": "gingerity",
+  "PoolId": 1,
+  "PoolName": "Default",
+  "ServerUrl": "https://pipelinesghubeus25.actions.githubusercontent.com/yuVVrb3ABsxMPKAuw6GZGDonPCpYxAomSjwMrZOmejA9B6gGlC/",
+  "GitHubUrl": "https://github.com/leetaar/gingerity-space-website",
+  "WorkFolder": "_work",
+  "UseV2Flow": true,
+  "ServerUrlV2": "https://broker.actions.githubusercontent.com/"
+}
+[2025-06-28 20:20:13Z INFO BrokerMessageListener] Loading Credentials
+[2025-06-28 20:20:13Z INFO ConfigurationStore] HasCredentials()
+[2025-06-28 20:20:13Z INFO ConfigurationStore] stored True
+[2025-06-28 20:20:13Z INFO CredentialManager] GetCredentialProvider
+[2025-06-28 20:20:13Z INFO CredentialManager] Creating type OAuth
+[2025-06-28 20:20:13Z INFO CredentialManager] Creating credential type: OAuth
+[2025-06-28 20:20:13Z INFO HostContext] Well known directory 'Bin': '/var/www/gingerity.space/actions-runner/bin'
+[2025-06-28 20:20:13Z INFO HostContext] Well known directory 'Root': '/var/www/gingerity.space/actions-runner'
+[2025-06-28 20:20:13Z INFO HostContext] Well known config file 'RSACredentials': '/var/www/gingerity.space/actions-runner/.credentials_rsaparams'
+[2025-06-28 20:20:13Z INFO RSAFileKeyManager] Loading RSA key parameters from file /var/www/gingerity.space/actions-runner/.credentials_rsaparams
+[2025-06-28 20:20:13Z INFO BrokerMessageListener] Attempt to create session.
+[2025-06-28 20:20:13Z INFO BrokerMessageListener] Connecting to the Broker Server...
+[2025-06-28 20:20:13Z INFO ConfigurationStore] HasCredentials()
+[2025-06-28 20:20:13Z INFO ConfigurationStore] stored True
+[2025-06-28 20:20:13Z INFO CredentialManager] GetCredentialProvider
+[2025-06-28 20:20:13Z INFO CredentialManager] Creating type OAuth
+[2025-06-28 20:20:13Z INFO CredentialManager] Creating credential type: OAuth
+[2025-06-28 20:20:13Z INFO RSAFileKeyManager] Loading RSA key parameters from file /var/www/gingerity.space/actions-runner/.credentials_rsaparams
+[2025-06-28 20:20:13Z INFO BrokerMessageListener] VssConnection created
+[2025-06-28 20:20:13Z INFO BrokerMessageListener] Connecting to the Runner server...
+[2025-06-28 20:20:13Z INFO RunnerServer] EstablishVssConnection
+[2025-06-28 20:20:14Z INFO RunnerServer] Establish connection with 100 seconds timeout.
+[2025-06-28 20:20:14Z INFO GitHubActionsService] Starting operation Location.GetConnectionData
+[2025-06-28 20:20:14Z INFO RunnerServer] EstablishVssConnection
+[2025-06-28 20:20:14Z INFO RunnerServer] Establish connection with 60 seconds timeout.
+[2025-06-28 20:20:14Z INFO GitHubActionsService] Starting operation Location.GetConnectionData
+[2025-06-28 20:20:14Z INFO RunnerServer] EstablishVssConnection
+[2025-06-28 20:20:14Z INFO RunnerServer] Establish connection with 60 seconds timeout.
+[2025-06-28 20:20:14Z INFO GitHubActionsService] Starting operation Location.GetConnectionData
+[2025-06-28 20:20:14Z INFO GitHubActionsService] Finished operation Location.GetConnectionData
+[2025-06-28 20:20:14Z INFO GitHubActionsService] Finished operation Location.GetConnectionData
+[2025-06-28 20:20:14Z INFO GitHubActionsService] Finished operation Location.GetConnectionData
+[2025-06-28 20:20:15Z INFO BrokerMessageListener] VssConnection created
+[2025-06-28 20:20:15Z INFO Terminal] WRITE LINE: 
+[2025-06-28 20:20:15Z INFO Terminal] WRITE LINE: 
+[2025-06-28 20:20:15Z INFO RSAFileKeyManager] Loading RSA key parameters from file /var/www/gingerity.space/actions-runner/.credentials_rsaparams
+[2025-06-28 20:20:15Z INFO RSAFileKeyManager] Loading RSA key parameters from file /var/www/gingerity.space/actions-runner/.credentials_rsaparams
+[2025-06-28 20:20:16Z INFO GitHubActionsService] AAD Correlation ID for this token request: Unknown
+[2025-06-28 20:20:16Z ERR  GitHubActionsService] POST request to https://broker.actions.githubusercontent.com/session failed. HTTP Status: Conflict
+[2025-06-28 20:20:16Z ERR  BrokerMessageListener] Catch exception during create session.
+[2025-06-28 20:20:16Z ERR  BrokerMessageListener] GitHub.DistributedTask.WebApi.TaskAgentSessionConflictException: Error: Conflict
+   at GitHub.Actions.RunService.WebApi.BrokerHttpClient.CreateSessionAsync(TaskAgentSession session, CancellationToken cancellationToken)
+   at GitHub.Runner.Common.BrokerServer.CreateSessionAsync(TaskAgentSession session, CancellationToken cancellationToken)
+   at GitHub.Runner.Listener.BrokerMessageListener.CreateSessionAsync(CancellationToken token)
+[2025-06-28 20:20:16Z INFO BrokerMessageListener] The session for this runner already exists.
+[2025-06-28 20:20:16Z ERR  Terminal] WRITE ERROR: A session for this runner already exists.
+[2025-06-28 20:20:16Z INFO BrokerMessageListener] The session conflict exception haven't reached retry limit.
+[2025-06-28 20:20:16Z ERR  Terminal] WRITE ERROR: 2025-06-28 20:20:16Z: Runner connect error: Error: Conflict. Retrying until reconnected.
+[2025-06-28 20:20:16Z INFO BrokerMessageListener] Sleeping for 30 seconds before retrying.
+[2025-06-28 20:20:46Z INFO BrokerMessageListener] Attempt to create session.
+[2025-06-28 20:20:46Z INFO BrokerMessageListener] Connecting to the Broker Server...
+[2025-06-28 20:20:46Z INFO ConfigurationStore] HasCredentials()
+[2025-06-28 20:20:46Z INFO ConfigurationStore] stored True
+[2025-06-28 20:20:46Z INFO CredentialManager] GetCredentialProvider
+[2025-06-28 20:20:46Z INFO CredentialManager] Creating type OAuth
+[2025-06-28 20:20:46Z INFO CredentialManager] Creating credential type: OAuth
+[2025-06-28 20:20:46Z INFO RSAFileKeyManager] Loading RSA key parameters from file /var/www/gingerity.space/actions-runner/.credentials_rsaparams
+[2025-06-28 20:20:46Z INFO BrokerMessageListener] VssConnection created
+[2025-06-28 20:20:46Z INFO BrokerMessageListener] Connecting to the Runner server...
+[2025-06-28 20:20:46Z INFO RunnerServer] EstablishVssConnection
+[2025-06-28 20:20:46Z INFO RunnerServer] Establish connection with 100 seconds timeout.
+[2025-06-28 20:20:46Z INFO GitHubActionsService] Starting operation Location.GetConnectionData
+[2025-06-28 20:20:46Z INFO RunnerServer] EstablishVssConnection
+[2025-06-28 20:20:46Z INFO RunnerServer] Establish connection with 60 seconds timeout.
+[2025-06-28 20:20:46Z INFO GitHubActionsService] Starting operation Location.GetConnectionData
+[2025-06-28 20:20:46Z INFO RunnerServer] EstablishVssConnection
+[2025-06-28 20:20:46Z INFO RunnerServer] Establish connection with 60 seconds timeout.
+[2025-06-28 20:20:46Z INFO GitHubActionsService] Starting operation Location.GetConnectionData
+[2025-06-28 20:20:47Z INFO GitHubActionsService] Finished operation Location.GetConnectionData
+[2025-06-28 20:20:47Z INFO GitHubActionsService] Finished operation Location.GetConnectionData
+[2025-06-28 20:20:47Z INFO GitHubActionsService] Finished operation Location.GetConnectionData
+[2025-06-28 20:20:47Z INFO BrokerMessageListener] VssConnection created
+[2025-06-28 20:20:47Z INFO Terminal] WRITE LINE: 
+[2025-06-28 20:20:47Z INFO Terminal] WRITE LINE: 
+[2025-06-28 20:20:47Z INFO RSAFileKeyManager] Loading RSA key parameters from file /var/www/gingerity.space/actions-runner/.credentials_rsaparams
+[2025-06-28 20:20:47Z INFO RSAFileKeyManager] Loading RSA key parameters from file /var/www/gingerity.space/actions-runner/.credentials_rsaparams
+[2025-06-28 20:20:47Z INFO GitHubActionsService] AAD Correlation ID for this token request: Unknown
+[2025-06-28 20:20:48Z ERR  GitHubActionsService] POST request to https://broker.actions.githubusercontent.com/session failed. HTTP Status: Conflict
+[2025-06-28 20:20:48Z ERR  BrokerMessageListener] Catch exception during create session.
+[2025-06-28 20:20:48Z ERR  BrokerMessageListener] GitHub.DistributedTask.WebApi.TaskAgentSessionConflictException: Error: Conflict
+   at GitHub.Actions.RunService.WebApi.BrokerHttpClient.CreateSessionAsync(TaskAgentSession session, CancellationToken cancellationToken)
+   at GitHub.Runner.Common.BrokerServer.CreateSessionAsync(TaskAgentSession session, CancellationToken cancellationToken)
+   at GitHub.Runner.Listener.BrokerMessageListener.CreateSessionAsync(CancellationToken token)
+[2025-06-28 20:20:48Z INFO BrokerMessageListener] The session for this runner already exists.
+[2025-06-28 20:20:48Z ERR  Terminal] WRITE ERROR: A session for this runner already exists.
+[2025-06-28 20:20:48Z INFO BrokerMessageListener] The session conflict exception haven't reached retry limit.
+[2025-06-28 20:20:48Z INFO BrokerMessageListener] Sleeping for 30 seconds before retrying.
+[2025-06-28 20:21:18Z INFO BrokerMessageListener] Attempt to create session.
+[2025-06-28 20:21:18Z INFO BrokerMessageListener] Connecting to the Broker Server...
+[2025-06-28 20:21:18Z INFO ConfigurationStore] HasCredentials()
+[2025-06-28 20:21:18Z INFO ConfigurationStore] stored True
+[2025-06-28 20:21:18Z INFO CredentialManager] GetCredentialProvider
+[2025-06-28 20:21:18Z INFO CredentialManager] Creating type OAuth
+[2025-06-28 20:21:18Z INFO CredentialManager] Creating credential type: OAuth
+[2025-06-28 20:21:18Z INFO RSAFileKeyManager] Loading RSA key parameters from file /var/www/gingerity.space/actions-runner/.credentials_rsaparams
+[2025-06-28 20:21:18Z INFO BrokerMessageListener] VssConnection created
+[2025-06-28 20:21:18Z INFO BrokerMessageListener] Connecting to the Runner server...
+[2025-06-28 20:21:18Z INFO RunnerServer] EstablishVssConnection
+[2025-06-28 20:21:18Z INFO RunnerServer] Establish connection with 100 seconds timeout.
+[2025-06-28 20:21:18Z INFO GitHubActionsService] Starting operation Location.GetConnectionData
+[2025-06-28 20:21:18Z INFO RunnerServer] EstablishVssConnection
+[2025-06-28 20:21:18Z INFO RunnerServer] Establish connection with 60 seconds timeout.
+[2025-06-28 20:21:18Z INFO GitHubActionsService] Starting operation Location.GetConnectionData
+[2025-06-28 20:21:18Z INFO RunnerServer] EstablishVssConnection
+[2025-06-28 20:21:18Z INFO RunnerServer] Establish connection with 60 seconds timeout.
+[2025-06-28 20:21:18Z INFO GitHubActionsService] Starting operation Location.GetConnectionData
+[2025-06-28 20:21:18Z INFO GitHubActionsService] Finished operation Location.GetConnectionData
+[2025-06-28 20:21:18Z INFO GitHubActionsService] Finished operation Location.GetConnectionData
+[2025-06-28 20:21:18Z INFO GitHubActionsService] Finished operation Location.GetConnectionData
+[2025-06-28 20:21:18Z INFO BrokerMessageListener] VssConnection created
+[2025-06-28 20:21:18Z INFO Terminal] WRITE LINE: 
+[2025-06-28 20:21:18Z INFO Terminal] WRITE LINE: 
+[2025-06-28 20:21:18Z INFO RSAFileKeyManager] Loading RSA key parameters from file /var/www/gingerity.space/actions-runner/.credentials_rsaparams
+[2025-06-28 20:21:18Z INFO RSAFileKeyManager] Loading RSA key parameters from file /var/www/gingerity.space/actions-runner/.credentials_rsaparams
+[2025-06-28 20:21:19Z INFO GitHubActionsService] AAD Correlation ID for this token request: Unknown
+[2025-06-28 20:21:19Z ERR  GitHubActionsService] POST request to https://broker.actions.githubusercontent.com/session failed. HTTP Status: Conflict
+[2025-06-28 20:21:19Z ERR  BrokerMessageListener] Catch exception during create session.
+[2025-06-28 20:21:19Z ERR  BrokerMessageListener] GitHub.DistributedTask.WebApi.TaskAgentSessionConflictException: Error: Conflict
+   at GitHub.Actions.RunService.WebApi.BrokerHttpClient.CreateSessionAsync(TaskAgentSession session, CancellationToken cancellationToken)
+   at GitHub.Runner.Common.BrokerServer.CreateSessionAsync(TaskAgentSession session, CancellationToken cancellationToken)
+   at GitHub.Runner.Listener.BrokerMessageListener.CreateSessionAsync(CancellationToken token)
+[2025-06-28 20:21:19Z INFO BrokerMessageListener] The session for this runner already exists.
+[2025-06-28 20:21:19Z ERR  Terminal] WRITE ERROR: A session for this runner already exists.
+[2025-06-28 20:21:19Z INFO BrokerMessageListener] The session conflict exception haven't reached retry limit.
+[2025-06-28 20:21:19Z INFO BrokerMessageListener] Sleeping for 30 seconds before retrying.
+[2025-06-28 20:21:49Z INFO BrokerMessageListener] Attempt to create session.
+[2025-06-28 20:21:49Z INFO BrokerMessageListener] Connecting to the Broker Server...
+[2025-06-28 20:21:49Z INFO ConfigurationStore] HasCredentials()
+[2025-06-28 20:21:49Z INFO ConfigurationStore] stored True
+[2025-06-28 20:21:49Z INFO CredentialManager] GetCredentialProvider
+[2025-06-28 20:21:49Z INFO CredentialManager] Creating type OAuth
+[2025-06-28 20:21:49Z INFO CredentialManager] Creating credential type: OAuth
+[2025-06-28 20:21:49Z INFO RSAFileKeyManager] Loading RSA key parameters from file /var/www/gingerity.space/actions-runner/.credentials_rsaparams
+[2025-06-28 20:21:49Z INFO BrokerMessageListener] VssConnection created
+[2025-06-28 20:21:49Z INFO BrokerMessageListener] Connecting to the Runner server...
+[2025-06-28 20:21:49Z INFO RunnerServer] EstablishVssConnection
+[2025-06-28 20:21:49Z INFO RunnerServer] Establish connection with 100 seconds timeout.
+[2025-06-28 20:21:49Z INFO GitHubActionsService] Starting operation Location.GetConnectionData
+[2025-06-28 20:21:49Z INFO RunnerServer] EstablishVssConnection
+[2025-06-28 20:21:49Z INFO RunnerServer] Establish connection with 60 seconds timeout.
+[2025-06-28 20:21:49Z INFO GitHubActionsService] Starting operation Location.GetConnectionData
+[2025-06-28 20:21:49Z INFO RunnerServer] EstablishVssConnection
+[2025-06-28 20:21:49Z INFO RunnerServer] Establish connection with 60 seconds timeout.
+[2025-06-28 20:21:49Z INFO GitHubActionsService] Starting operation Location.GetConnectionData
+[2025-06-28 20:21:50Z INFO GitHubActionsService] Finished operation Location.GetConnectionData
+[2025-06-28 20:21:50Z INFO GitHubActionsService] Finished operation Location.GetConnectionData
+[2025-06-28 20:21:50Z INFO GitHubActionsService] Finished operation Location.GetConnectionData
+[2025-06-28 20:21:50Z INFO BrokerMessageListener] VssConnection created
+[2025-06-28 20:21:50Z INFO Terminal] WRITE LINE: 
+[2025-06-28 20:21:50Z INFO Terminal] WRITE LINE: 
+[2025-06-28 20:21:50Z INFO RSAFileKeyManager] Loading RSA key parameters from file /var/www/gingerity.space/actions-runner/.credentials_rsaparams
+[2025-06-28 20:21:50Z INFO RSAFileKeyManager] Loading RSA key parameters from file /var/www/gingerity.space/actions-runner/.credentials_rsaparams
+[2025-06-28 20:21:50Z INFO GitHubActionsService] AAD Correlation ID for this token request: Unknown
+[2025-06-28 20:21:51Z ERR  GitHubActionsService] POST request to https://broker.actions.githubusercontent.com/session failed. HTTP Status: Conflict
+[2025-06-28 20:21:51Z ERR  BrokerMessageListener] Catch exception during create session.
+[2025-06-28 20:21:51Z ERR  BrokerMessageListener] GitHub.DistributedTask.WebApi.TaskAgentSessionConflictException: Error: Conflict
+   at GitHub.Actions.RunService.WebApi.BrokerHttpClient.CreateSessionAsync(TaskAgentSession session, CancellationToken cancellationToken)
+   at GitHub.Runner.Common.BrokerServer.CreateSessionAsync(TaskAgentSession session, CancellationToken cancellationToken)
+   at GitHub.Runner.Listener.BrokerMessageListener.CreateSessionAsync(CancellationToken token)
+[2025-06-28 20:21:51Z INFO BrokerMessageListener] The session for this runner already exists.
+[2025-06-28 20:21:51Z ERR  Terminal] WRITE ERROR: A session for this runner already exists.
+[2025-06-28 20:21:51Z INFO BrokerMessageListener] The session conflict exception haven't reached retry limit.
+[2025-06-28 20:21:51Z INFO BrokerMessageListener] Sleeping for 30 seconds before retrying.
+[2025-06-28 20:22:21Z INFO BrokerMessageListener] Attempt to create session.
+[2025-06-28 20:22:21Z INFO BrokerMessageListener] Connecting to the Broker Server...
+[2025-06-28 20:22:21Z INFO ConfigurationStore] HasCredentials()
+[2025-06-28 20:22:21Z INFO ConfigurationStore] stored True
+[2025-06-28 20:22:21Z INFO CredentialManager] GetCredentialProvider
+[2025-06-28 20:22:21Z INFO CredentialManager] Creating type OAuth
+[2025-06-28 20:22:21Z INFO CredentialManager] Creating credential type: OAuth
+[2025-06-28 20:22:21Z INFO RSAFileKeyManager] Loading RSA key parameters from file /var/www/gingerity.space/actions-runner/.credentials_rsaparams
+[2025-06-28 20:22:21Z INFO BrokerMessageListener] VssConnection created
+[2025-06-28 20:22:21Z INFO BrokerMessageListener] Connecting to the Runner server...
+[2025-06-28 20:22:21Z INFO RunnerServer] EstablishVssConnection
+[2025-06-28 20:22:21Z INFO RunnerServer] Establish connection with 100 seconds timeout.
+[2025-06-28 20:22:21Z INFO GitHubActionsService] Starting operation Location.GetConnectionData
+[2025-06-28 20:22:21Z INFO RunnerServer] EstablishVssConnection
+[2025-06-28 20:22:21Z INFO RunnerServer] Establish connection with 60 seconds timeout.
+[2025-06-28 20:22:21Z INFO GitHubActionsService] Starting operation Location.GetConnectionData
+[2025-06-28 20:22:21Z INFO RunnerServer] EstablishVssConnection
+[2025-06-28 20:22:21Z INFO RunnerServer] Establish connection with 60 seconds timeout.
+[2025-06-28 20:22:21Z INFO GitHubActionsService] Starting operation Location.GetConnectionData
+[2025-06-28 20:22:21Z INFO GitHubActionsService] Finished operation Location.GetConnectionData
+[2025-06-28 20:22:21Z INFO GitHubActionsService] Finished operation Location.GetConnectionData
+[2025-06-28 20:22:21Z INFO GitHubActionsService] Finished operation Location.GetConnectionData
+[2025-06-28 20:22:21Z INFO BrokerMessageListener] VssConnection created
+[2025-06-28 20:22:21Z INFO Terminal] WRITE LINE: 
+[2025-06-28 20:22:21Z INFO Terminal] WRITE LINE: 
+[2025-06-28 20:22:21Z INFO RSAFileKeyManager] Loading RSA key parameters from file /var/www/gingerity.space/actions-runner/.credentials_rsaparams
+[2025-06-28 20:22:21Z INFO RSAFileKeyManager] Loading RSA key parameters from file /var/www/gingerity.space/actions-runner/.credentials_rsaparams
+[2025-06-28 20:22:22Z INFO GitHubActionsService] AAD Correlation ID for this token request: Unknown
+[2025-06-28 20:22:22Z ERR  GitHubActionsService] POST request to https://broker.actions.githubusercontent.com/session failed. HTTP Status: Conflict
+[2025-06-28 20:22:22Z ERR  BrokerMessageListener] Catch exception during create session.
+[2025-06-28 20:22:22Z ERR  BrokerMessageListener] GitHub.DistributedTask.WebApi.TaskAgentSessionConflictException: Error: Conflict
+   at GitHub.Actions.RunService.WebApi.BrokerHttpClient.CreateSessionAsync(TaskAgentSession session, CancellationToken cancellationToken)
+   at GitHub.Runner.Common.BrokerServer.CreateSessionAsync(TaskAgentSession session, CancellationToken cancellationToken)
+   at GitHub.Runner.Listener.BrokerMessageListener.CreateSessionAsync(CancellationToken token)
+[2025-06-28 20:22:22Z INFO BrokerMessageListener] The session for this runner already exists.
+[2025-06-28 20:22:22Z ERR  Terminal] WRITE ERROR: A session for this runner already exists.
+[2025-06-28 20:22:22Z INFO BrokerMessageListener] The session conflict exception haven't reached retry limit.
+[2025-06-28 20:22:22Z INFO BrokerMessageListener] Sleeping for 30 seconds before retrying.
+[2025-06-28 20:22:52Z INFO BrokerMessageListener] Attempt to create session.
+[2025-06-28 20:22:52Z INFO BrokerMessageListener] Connecting to the Broker Server...
+[2025-06-28 20:22:52Z INFO ConfigurationStore] HasCredentials()
+[2025-06-28 20:22:52Z INFO ConfigurationStore] stored True
+[2025-06-28 20:22:52Z INFO CredentialManager] GetCredentialProvider
+[2025-06-28 20:22:52Z INFO CredentialManager] Creating type OAuth
+[2025-06-28 20:22:52Z INFO CredentialManager] Creating credential type: OAuth
+[2025-06-28 20:22:52Z INFO RSAFileKeyManager] Loading RSA key parameters from file /var/www/gingerity.space/actions-runner/.credentials_rsaparams
+[2025-06-28 20:22:52Z INFO BrokerMessageListener] VssConnection created
+[2025-06-28 20:22:52Z INFO BrokerMessageListener] Connecting to the Runner server...
+[2025-06-28 20:22:52Z INFO RunnerServer] EstablishVssConnection
+[2025-06-28 20:22:52Z INFO RunnerServer] Establish connection with 100 seconds timeout.
+[2025-06-28 20:22:52Z INFO GitHubActionsService] Starting operation Location.GetConnectionData
+[2025-06-28 20:22:52Z INFO RunnerServer] EstablishVssConnection
+[2025-06-28 20:22:52Z INFO RunnerServer] Establish connection with 60 seconds timeout.
+[2025-06-28 20:22:52Z INFO GitHubActionsService] Starting operation Location.GetConnectionData
+[2025-06-28 20:22:52Z INFO RunnerServer] EstablishVssConnection
+[2025-06-28 20:22:52Z INFO RunnerServer] Establish connection with 60 seconds timeout.
+[2025-06-28 20:22:52Z INFO GitHubActionsService] Starting operation Location.GetConnectionData
+[2025-06-28 20:22:52Z INFO GitHubActionsService] Finished operation Location.GetConnectionData
+[2025-06-28 20:22:52Z INFO GitHubActionsService] Finished operation Location.GetConnectionData
+[2025-06-28 20:22:52Z INFO GitHubActionsService] Finished operation Location.GetConnectionData
+[2025-06-28 20:22:52Z INFO BrokerMessageListener] VssConnection created
+[2025-06-28 20:22:52Z INFO Terminal] WRITE LINE: 
+[2025-06-28 20:22:52Z INFO Terminal] WRITE LINE: 
+[2025-06-28 20:22:52Z INFO RSAFileKeyManager] Loading RSA key parameters from file /var/www/gingerity.space/actions-runner/.credentials_rsaparams
+[2025-06-28 20:22:52Z INFO RSAFileKeyManager] Loading RSA key parameters from file /var/www/gingerity.space/actions-runner/.credentials_rsaparams
+[2025-06-28 20:22:53Z INFO GitHubActionsService] AAD Correlation ID for this token request: Unknown
+[2025-06-28 20:22:53Z INFO BrokerMessageListener] Session created.
+[2025-06-28 20:22:53Z INFO Terminal] WRITE LINE: 2025-06-28 20:22:53Z: Runner reconnected.
+[2025-06-28 20:22:53Z INFO Terminal] WRITE LINE: Current runner version: '2.325.0'
+[2025-06-28 20:22:53Z INFO Terminal] WRITE LINE: 2025-06-28 20:22:53Z: Listening for Jobs
+[2025-06-28 20:22:53Z INFO JobDispatcher] Set runner/worker IPC timeout to 30 seconds.

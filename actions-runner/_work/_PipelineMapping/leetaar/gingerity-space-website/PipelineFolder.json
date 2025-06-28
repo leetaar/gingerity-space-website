@@ -1,0 +1,12 @@
+﻿{
+  "repositoryName": "leetaar/gingerity-space-website",
+  "pipelineDirectory": "gingerity-space-website",
+  "workspaceDirectory": "gingerity-space-website/gingerity-space-website",
+  "repositories": {
+    "leetaar/gingerity-space-website": {
+      "repositoryPath": "gingerity-space-website/gingerity-space-website",
+      "lastRunOn": "06/28/2025 22:19:36 +02:00"
+    }
+  },
+  "lastRunOn": "06/28/2025 22:19:36 +02:00"
+}
