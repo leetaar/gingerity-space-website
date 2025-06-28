@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GINGERITY - Od zera do developera</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+/* Reset any inherited CSS from main app */
+* {
+    box-sizing: border-box;
+}
+
+html {
+    overflow: hidden !important;
+    height: 100vh !important;
+}
+
+body {
+    overflow: hidden !important;
+    height: 100vh !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+        .glass-card {
+            background: rgba(31, 41, 55, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            top: 1.25rem;
+            left: -0.5rem;
+            width: 1rem;
+            height: 1rem;
+            border-radius: 9999px;
+            background-color: #4f46e5;
+            border: 3px solid #111827;
+            z-index: 10;
+        }
+        .timeline-line {
+            position: absolute;
+            top: 1.25rem;
+            left: -0.125rem;
+            bottom: 0;
+            width: 2px;
+            background-color: #374151;
+        }
+        .future-item::before {
+            background-color: #6b7280;
+        }
+        .future-line {
+            background-color: #4b5563;
+        }
+        
+        /* Hide scrollbars but keep functionality */
+        .scroll-column {
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+        .scroll-column::-webkit-scrollbar {
+            display: none;
+        }
+        
+        /* Layout containers */
+        .page-container {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background: linear-gradient(to bottom right, #111827, #1f2937, #312e81);
+        }
+        
+        .header-section {
+            flex-shrink: 0;
+            padding: 1rem;
+        }
+        
+        .content-section {
+            flex: 1;
+            min-height: 0; /* Important for flexbox scrolling */
+            padding: 0 1rem;
+        }
+        
+        .footer-section {
+            flex-shrink: 0;
+            padding: 1rem;
+        }
+        
+        .columns-container {
+            height: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+        
+        .column {
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+        }
+        
+        .column-header {
+            flex-shrink: 0;
+            margin-bottom: 1rem;
+        }
+        
+        .column-content {
+            flex: 1;
+            overflow-y: auto;
+            padding-right: 0.5rem;
+        }
+    </style>
+</head>
+<body class="text-gray-200 antialiased">
+    <div class="page-container">
+        
+        <!-- Header Section -->
+        <div class="header-section">
+            <div class="max-w-7xl mx-auto">
+                <div class="glass-card rounded-2xl p-6 text-center shadow-2xl">
+                    <div class="flex justify-center items-center mb-4">
+                        <div class="w-16 h-16 bg-indigo-500/20 rounded-full flex items-center justify-center border-2 border-indigo-500">
+                            <svg class="w-10 h-10 text-indigo-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                               <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                    </div>
+                    <h1 class="text-3xl font-bold text-white mb-2">OD ZERA DO DEVELOPERA</h1>
+                    <p class="text-indigo-400 font-semibold mb-2">GINGERITY.space</p>
+                    <p class="text-gray-400">
+                        Projekt serwera Raspberry Pi z dodatkowymi funkcjonalnościami.<br>
+                        Linux, webdev, networking.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Content Section -->
+        <div class="content-section">
+            <div class="max-w-7xl mx-auto h-full">
+                <div class="columns-container">
+                    
+                    <!-- Left Column -->
+                    <div class="column">
+                        <div class="column-header">
+                            <h2 class="text-2xl font-bold text-white text-center">Ukończone Lekcje</h2>
+                        </div>
+                        <div class="column-content scroll-column">
+                            <div class="relative pl-8 pb-8">
+                                <div class="timeline-line"></div>
+
+                                <div class="relative timeline-item pb-6">
+                                    <div class="glass-card rounded-lg p-4">
+                                        <p class="text-sm text-indigo-400 font-medium">Lekcja 1</p>
+                                        <h3 class="text-lg font-semibold text-white mt-1">Podstawowy Dashboard i Kamera</h3>
+                                        <p class="text-gray-400 mt-2 text-sm">Flask app z metrykami systemowymi (CPU, RAM, temperatura). Kamera HD z libcamera-vid, autoryzacja, galeria zdjęć.</p>
+                                    </div>
+                                </div>
+
+                                <div class="relative timeline-item pb-6">
+                                    <div class="glass-card rounded-lg p-4">
+                                        <p class="text-sm text-indigo-400 font-medium">Lekcja 2</p>
+                                        <h3 class="text-lg font-semibold text-white mt-1">Cloudflare Tunnel i Dostęp Zdalny</h3>
+                                        <p class="text-gray-400 mt-2 text-sm">Dostęp globalny przez tunel, SSH terminal w przeglądarce. Zero Trust security, pierwszy backup system.</p>
+                                    </div>
+                                </div>
+
+                                <div class="relative timeline-item pb-6">
+                                    <div class="glass-card rounded-lg p-4">
+                                        <p class="text-sm text-indigo-400 font-medium">Lekcja 3</p>
+                                        <h3 class="text-lg font-semibold text-white mt-1">System Alertów Multi-Channel</h3>
+                                        <p class="text-gray-400 mt-2 text-sm">Powiadomienia email, Discord, Telegram. Progi temperaturowe i CPU. Cooldown 5 minut.</p>
+                                    </div>
+                                </div>
+
+                                <div class="relative timeline-item pb-6">
+                                    <div class="glass-card rounded-lg p-4">
+                                        <p class="text-sm text-emerald-400 font-medium">Lekcja 4</p>
+                                        <h3 class="text-lg font-semibold text-white mt-1">Enterprise Backup Strategy</h3>
+                                        <p class="text-gray-400 mt-2 text-sm">fsarchiver - pełne obrazy partycji, kompresja zstd, automatyczny upload do Google Drive. Czas wykonania: 5 minut.</p>
+                                    </div>
+                                </div>
+
+                                <div class="relative timeline-item pb-6">
+                                    <div class="glass-card rounded-lg p-4">
+                                        <p class="text-sm text-yellow-400 font-medium">Lekcja 5</p>
+                                        <h3 class="text-lg font-semibold text-white mt-1">Kontrola Wersji i GitHub</h3>
+                                        <p class="text-gray-400 mt-2 text-sm">Repozytorium Git, .gitignore, uwierzytelnienie SSH keys. Publiczne repo na GitHub.</p>
+                                    </div>
+                                </div>
+
+                                <div class="relative timeline-item pb-6">
+                                    <div class="glass-card rounded-lg p-4">
+                                        <p class="text-sm text-yellow-400 font-medium">Lekcja 6</p>
+                                        <h3 class="text-lg font-semibold text-white mt-1">Production Deploy Stack</h3>
+                                        <p class="text-gray-400 mt-2 text-sm">Migracja do /var/www/, production stack. 3 workers Gunicorn, proxy przez Nginx. Systemd services.</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="relative timeline-item pb-6">
+                                    <div class="glass-card rounded-lg p-4">
+                                        <p class="text-sm text-yellow-400 font-medium">Lekcja 7</p>
+                                        <h3 class="text-lg font-semibold text-white mt-1">Multi-Service Architecture</h3>
+                                        <p class="text-gray-400 mt-2 text-sm">files.gingerity.space, FileBrowser na porcie 8081. Rozwiązanie konfliktów SSH vs SFTP routing.</p>
+                                    </div>
+                                </div>
+
+                                <div class="relative timeline-item pb-6">
+                                    <div class="glass-card rounded-lg p-4">
+                                        <p class="text-sm text-yellow-400 font-medium">Lekcja 8</p>
+                                        <h3 class="text-lg font-semibold text-white mt-1">Performance i Threading</h3>
+                                        <p class="text-gray-400 mt-2 text-sm">ThreadPoolExecutor, asynchroniczne operacje kamery, eliminacja blocking calls. Poprawki security validation i error handling.</p>
+                                    </div>
+                                </div>
+
+                                <div class="relative timeline-item pb-6">
+                                    <div class="glass-card rounded-lg p-4">
+                                        <p class="text-sm text-yellow-400 font-medium">Lekcja 9</p>
+                                        <h3 class="text-lg font-semibold text-white mt-1">Modern Frontend Design</h3>
+                                        <p class="text-gray-400 mt-2 text-sm">CSS Variables, Inter font, flexbox layout. Responsive design bez scroll na desktop. Glass-morphism effects.</p>
+                                    </div>
+                                </div>
+
+                                <div class="relative timeline-item pb-6">
+                                    <div class="glass-card rounded-lg p-4 border-dashed border-indigo-500">
+                                        <p class="text-sm text-indigo-400 font-medium">Status</p>
+                                        <h3 class="text-lg font-semibold text-white mt-1">System Produkcyjny</h3>
+                                        <p class="text-gray-400 mt-2 text-sm">Nginx+Gunicorn, multi-service architecture, async operations, disaster recovery. Działający system IoT.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Column -->
+                    <div class="column">
+                       <div class="column-header">
+                           <h2 class="text-2xl font-bold text-white text-center">Planowane Lekcje</h2>
+                       </div>
+                       <div class="column-content scroll-column">
+                           <div class="relative pl-8 pb-8">
+                               <div class="timeline-line future-line"></div>
+
+                               <div class="relative timeline-item future-item pb-6">
+                                   <div class="glass-card rounded-lg p-4 border-gray-600">
+                                       <p class="text-sm text-gray-400 font-medium">Lekcja 10</p>
+                                       <h3 class="text-lg font-semibold text-white mt-1">Rozszerzony Monitoring</h3>
+                                       <p class="text-gray-400 mt-2 text-sm">Metryki sieciowe: przepustowość, ping, aktywne połączenia. Top procesów CPU/RAM. Historia danych w SQLite z wykresami Chart.js.</p>
+                                       <p class="text-gray-500 mt-2 text-xs">Cel: Analiza trendów zamiast tylko migawki</p>
+                                   </div>
+                               </div>
+
+                               <div class="relative timeline-item future-item pb-6">
+                                   <div class="glass-card rounded-lg p-4 border-gray-600">
+                                       <p class="text-sm text-gray-400 font-medium">Lekcja 11</p>
+                                       <h3 class="text-lg font-semibold text-white mt-1">Automatyzacja i Ciągła Integracja</h3>
+                                       <p class="text-gray-400 mt-2 text-sm">GitHub Actions: automatyczne wdrażanie po push. Pytest dla tras Flask. Aktualizacje bez przestoju.</p>
+                                       <p class="text-gray-500 mt-2 text-xs">Cel: Eliminacja ręcznego wdrażania</p>
+                                   </div>
+                               </div>
+
+                               <div class="relative timeline-item future-item pb-6">
+                                   <div class="glass-card rounded-lg p-4 border-gray-600">
+                                       <p class="text-sm text-gray-400 font-medium">Lekcja 12</p>
+                                       <h3 class="text-lg font-semibold text-white mt-1">Baza Danych i Interfejs REST</h3>
+                                       <p class="text-gray-400 mt-2 text-sm">PostgreSQL zamiast plików. Interfejs REST z dokumentacją. Automatyczne archiwizowanie starych danych.</p>
+                                       <p class="text-gray-500 mt-2 text-xs">Cel: Skalowalna struktura danych</p>
+                                   </div>
+                               </div>
+                    
+                               <div class="relative timeline-item future-item pb-6">
+                                   <div class="glass-card rounded-lg p-4 border-gray-600">
+                                       <p class="text-sm text-gray-400 font-medium">Lekcja 13</p>
+                                       <h3 class="text-lg font-semibold text-white mt-1">Wzmocnienie Bezpieczeństwa</h3>
+                                       <p class="text-gray-400 mt-2 text-sm">Automatyzacja certyfikatów SSL. Ograniczanie liczby żądań przeciw atakom. Dzienniki audytu - kto, kiedy, co robił.</p>
+                                       <p class="text-gray-500 mt-2 text-xs">Cel: Bezpieczeństwo na poziomie produkcyjnym</p>
+                                   </div>
+                               </div>
+
+                               <div class="relative timeline-item future-item pb-6">
+                                   <div class="glass-card rounded-lg p-4 border-gray-600">
+                                       <p class="text-sm text-gray-400 font-medium">Lekcja 14</p>
+                                       <h3 class="text-lg font-semibold text-white mt-1">Wielouzytkownicza Chmura Plików</h3>
+                                       <p class="text-gray-400 mt-2 text-sm">Wydzielone katalogi użytkowników (/cloud/users/marcin). System uprawnień i limitów dyskowych. Wysyłanie/pobieranie przez interfejs webowy.</p>
+                                       <p class="text-gray-500 mt-2 text-xs">Cel: Prywatna chmura z zarządzaniem użytkownikami</p>
+                                   </div>
+                               </div>
+
+                               <div class="relative timeline-item future-item pb-6">
+                                   <div class="glass-card rounded-lg p-4 border-gray-600">
+                                       <p class="text-sm text-gray-400 font-medium">Lekcja 15</p>
+                                       <h3 class="text-lg font-semibold text-white mt-1">Stylowanie i Integracja Menedżera Plików</h3>
+                                       <p class="text-gray-400 mt-2 text-sm">Własne style CSS dla FileBrowser (szkło jak dashboard). Branding GINGERITY.SPACE. Integracja z systemem logowania dashboardu.</p>
+                                       <p class="text-gray-500 mt-2 text-xs">Cel: Spójny wygląd i ujednolicone logowanie</p>
+                                   </div>
+                               </div>
+
+                               <div class="relative timeline-item future-item pb-6">
+                                   <div class="glass-card rounded-lg p-4 border-gray-600">
+                                       <p class="text-sm text-gray-400 font-medium">Lekcja 16</p>
+                                       <h3 class="text-lg font-semibold text-white mt-1">Infrastruktura jako Kod</h3>
+                                       <p class="text-gray-400 mt-2 text-sm">Kontenery Docker dla aplikacji. Orkiestracja Docker Compose. Automatyczne testowanie przywracania kopii zapasowych.</p>
+                                       <p class="text-gray-500 mt-2 text-xs">Cel: Skalowanie i odtwarzalność</p>
+                                   </div>
+                               </div>
+                    
+                               <div class="relative timeline-item future-item pb-6">
+                                   <div class="glass-card rounded-lg p-4 border-dashed border-gray-500">
+                                       <p class="text-sm text-gray-400 font-medium">Zaawansowane</p>
+                                       <h3 class="text-lg font-semibold text-white mt-1">Funkcje Eksperckie</h3>
+                                       <p class="text-gray-400 mt-2 text-sm">Sztuczna inteligencja na brzegu sieci, mobilna aplikacja webowa, automatyzacja inteligentnego domu, orkiestracja Kubernetes.</p>
+                                       <p class="text-gray-500 mt-2 text-xs">Cel: Ekspertyza na poziomie seniora</p>
+                                   </div>
+                               </div>
+                           </div>
+                       </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer Section -->
+        <div class="footer-section">
+            <div class="max-w-7xl mx-auto">
+                <footer class="text-center text-gray-500 text-sm">
+                    <p>GINGERITY.SPACE &copy; 2025</p>
+                </footer>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,195 +1,523 @@
-
 <!DOCTYPE html>
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GINGERITY.space</title>
+    <title>GINGERITY.space Dashboard</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        /* Ograniczenie wysokości kart z procesami */
+        .process-card {
+            height: fit-content;
+            max-height: 300px;
+            min-height: 200px;
+        }
+        
+        .process-list {
+            max-height: 150px;
+            overflow-y: auto;
+            margin-top: 0.5rem;
+        }
+        
+        .process-list::-webkit-scrollbar {
+            width: 4px;
+        }
+        
+        .process-list::-webkit-scrollbar-track {
+            background: rgba(255,255,255,0.1);
+            border-radius: 2px;
+        }
+        
+        .process-list::-webkit-scrollbar-thumb {
+            background: rgba(79, 70, 229, 0.5);
+            border-radius: 2px;
+        }
+        
+        /* Karta z wykresem */
+        .chart-card {
+            height: fit-content;
+            min-height: 250px;
+        }
+        
+        .chart-container {
+            height: 180px;
+            margin-top: 0.5rem;
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-<img src="{{ url_for('static', filename='LOGO.png') }}" width="400px">
-        </div>
+    <div class="app-container">
+        <header class="app-header">
+            <a href="{{ url_for('gablotka') }}" title="Zobacz gablotkę osiągnięć">
+                <img src="{{ url_for('static', filename='LOGO.png') }}" alt="Logo Gingerity">
+            </a>
+        </header>
         
-        <!-- Sekcja kamery -->
-<div class="grid">
-    <div class="card">
-         <h3>📹 Kamera</h3> 
-        <p>
-            
-        </p>
-        <p>
-     
-        </p>
-        <!-- <a href="/cam">🔐 Przejdź do kamery</a>  -->
-    </div>
-    
-    <!-- Pozostałe karty (Procesor, RAM, Dysk, System) -->
-    <div class="card">...</div>
-    <!-- itd. -->
-</div>
-            
-            <!-- <div class="card">
-                <h3>🎮 Sterowanie</h3>
-                <div class="camera-controls">
-                    <button class="btn" onclick="startStream()">▶️ Start Stream</button>
-                    <button class="btn btn-danger" onclick="stopStream()">⏹️ Stop Stream</button>
-                    <button class="btn" onclick="takePhoto()">📸 Zrób zdjęcie</button>
-                    <button class="btn" onclick="refreshPhotos()">🔄 Odśwież zdjęcia</button>
+        <main class="main-content">
+            <div class="grid">
+                <div class="card">
+                    <h3><i class="fas fa-microchip"></i> Procesor</h3>
+                    <div class="metric">
+                        <span>Użycie CPU:</span>
+                        <span id="cpu-percent">--%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="cpu-bar"></div>
+                    </div>
+                    <div class="metric">
+                        <span>Temperatura:</span>
+                        <span id="cpu-temp">--°C</span>
+                    </div>
+                    <div class="metric">
+                        <span>Obciążenie (1m):</span>
+                        <span id="load-avg">--</span>
+                    </div>
                 </div>
                 
-                <div style="margin-top: 20px;">
-                    <h4>📊 Ostatnie zdjęcia</h4>
-                    <div class="photos-grid" id="photos-grid">
-                        <!-- Zdjęcia będą tutaj -->
+                <div class="card">
+                    <h3><i class="fas fa-memory"></i> RAM</h3>
+                    <div class="metric">
+                        <span>Użycie:</span>
+                        <span id="memory-percent">--%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="memory-bar"></div>
+                    </div>
+                    <div class="metric">
+                        <span>Wolne:</span>
+                        <span id="memory-free">-- GB</span>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h3><i class="fas fa-hdd"></i> Dysk</h3>
+                    <div class="metric">
+                        <span>Użycie:</span>
+                        <span id="disk-percent">--%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="disk-bar"></div>
+                    </div>
+                    <div class="metric">
+                        <span>Wolne:</span>
+                        <span id="disk-free">-- GB</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3><i class="fas fa-network-wired"></i> Sieć</h3>
+                    <div class="metric">
+                        <span>Wysłane:</span>
+                        <span id="network-sent">-- MB</span>
+                    </div>
+                    <div class="metric">
+                        <span>Odebrane:</span>
+                        <span id="network-recv">-- MB</span>
+                    </div>
+                    <div class="metric">
+                        <span>Połączenia:</span>
+                        <span id="active-connections">--</span>
+                    </div>
+                    <div class="metric">
+                        <span>Ping:</span>
+                        <span id="ping-time">-- ms</span>
+                    </div>
+                </div>
+
+                <div class="card process-card">
+                    <h3><i class="fas fa-list-ul"></i> Top Procesy CPU</h3>
+                    <div id="top-cpu-processes" class="process-list">
+                        <div class="metric"><span>Ładowanie...</span></div>
+                    </div>
+                </div>
+
+                <div class="card process-card">
+                    <h3><i class="fas fa-memory"></i> Top Procesy RAM</h3>
+                    <div id="top-ram-processes" class="process-list">
+                        <div class="metric"><span>Ładowanie...</span></div>
+                    </div>
+                </div>
+
+                <div class="card chart-card">
+                    <h3><i class="fas fa-chart-line"></i> Historia CPU (Real-time)</h3>
+                    <div class="chart-container">
+                        <canvas id="cpu-chart"></canvas>
+                    </div>
+                </div>
+
+                <div class="card card-clickable" onclick="window.location.href='/cam'">
+                    <h3><i class="fas fa-video"></i> Kamera</h3> 
+                    <p>Dostęp do podglądu z kamery i galerii zdjęć.</p>
+                    <span class="card-hint">Kliknij, aby przejść &rarr;</span>
+                </div>
+
+                <div class="card chart-card">
+                    <h3><i class="fas fa-chart-area"></i> Historia 24h (co godzinę)</h3>
+                    <div class="chart-container">
+                        <canvas id="history-chart"></canvas>
                     </div>
                 </div>
             </div>
-        </div> -->
+        </main>
         
-        <!-- Istniejące metryki systemu -->
-        <div class="grid">
-            <div class="card">
-                <h3>Procesor</h3>
-                <div class="metric">
-                    <span>Użycie CPU:</span>
-                    <span id="cpu-percent">--%</span>
-                </div>
-                <div class="progress-bar">
-                    <div class="progress-fill" id="cpu-bar"></div>
-                </div>
-                <div class="metric">
-                    <span>Temperatura:</span>
-                    <span id="cpu-temp">--°C</span>
-                </div>
-            </div>
-            
-            <div class="card">
-                <h3>RAM</h3>
-                <div class="metric">
-                    <span>Użyte:</span>
-                    <span id="memory-used">-- GB</span>
-                </div>
-                <div class="metric">
-                    <span>Całkowita:</span>
-                    <span id="memory-total">-- GB</span>
-                </div>
-                <div class="progress-bar">
-                    <div class="progress-fill" id="memory-bar"></div>
-                </div>
-                <div class="metric">
-                    <span>Użycie:</span>
-                    <span id="memory-percent">--%</span>
-                </div>
-            </div>
-            
-            <div class="card">
-                <h3>💾 Dysk</h3>
-                <div class="metric">
-                    <span>Użyte:</span>
-                    <span id="disk-used">-- GB</span>
-                </div>
-                <div class="metric">
-                    <span>Całkowita:</span>
-                    <span id="disk-total">-- GB</span>
-                </div>
-                <div class="progress-bar">
-                    <div class="progress-fill" id="disk-bar"></div>
-                </div>
-                <div class="metric">
-                    <span>Użycie:</span>
-                    <span id="disk-percent">--%</span>
-                </div>
-            </div>
-            
-            <div class="card">
-                <h3>⏱️ System</h3>
-                <div class="metric">
-                    <span>Czas działania:</span>
-                    <span id="uptime">--</span>
-                </div>
-                <div class="metric">
-                    <span>Ostatnia aktualizacja:</span>
-                    <span id="timestamp">--</span>
-                </div>
-                <div class="metric">
-                    <span>Status kamery:</span>
-                    <span id="camera-system-status">--</span>
-                </div>
-            </div>
-        </div>
-        
-        <div class="status">
-            Status połączenia: <span id="connection-status">🟢 Połączony</span>
-        </div>
+        <footer class="app-footer">
+            Status połączenia: <span id="connection-status">🟢 Połączony</span> | 
+            Uptime: <span id="system-uptime">--</span>
+        </footer>
     </div>
 
 <script>
-// Dodaj na koniec skryptu
-document.addEventListener('DOMContentLoaded', function() {
-    // Znajdź kartę kamery i dodaj kliknięcie
-    const cameraCard = document.querySelector('.card'); // Dostosuj selektor
-    if (cameraCard && cameraCard.querySelector('h3').textContent.includes('Kamera')) {
-        cameraCard.classList.add('camera-card');
-        cameraCard.addEventListener('click', function() {
-            window.location.href = '/cam';
-        });
-    }
-});
-</script>
+let cpuChart = null;
+let historyChart = null;
 
-<script>
-function updateDashboard() {
-    fetch('/api/system')
+function initCharts() {
+    const ctx = document.getElementById('cpu-chart').getContext('2d');
+    cpuChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: [],
+            datasets: [{
+                label: 'CPU %',
+                data: [],
+                borderColor: '#4f46e5',
+                backgroundColor: 'rgba(79, 70, 229, 0.1)',
+                tension: 0.4,
+                fill: true
+            }, {
+                label: 'RAM %',
+                data: [],
+                borderColor: '#10b981',
+                backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                tension: 0.4,
+                fill: false
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    labels: { color: '#e5e7eb', font: { size: 11 } }
+                }
+            },
+            scales: {
+                x: {
+                    ticks: { color: '#9ca3af', font: { size: 10 } },
+                    grid: { color: 'rgba(255,255,255,0.1)' }
+                },
+                y: {
+                    min: 0,
+                    max: 100,
+                    ticks: { color: '#9ca3af', font: { size: 10 } },
+                    grid: { color: 'rgba(255,255,255,0.1)' }
+                }
+            }
+        }
+    });
+
+    const ctx2 = document.getElementById('history-chart').getContext('2d');
+    historyChart = new Chart(ctx2, {
+        type: 'line',
+        data: {
+            labels: [],
+            datasets: [{
+                label: 'CPU %',
+                data: [],
+                borderColor: '#f59e0b',
+                backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                tension: 0.4,
+                fill: true
+            }, {
+                label: 'RAM %',
+                data: [],
+                borderColor: '#ef4444',
+                backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                tension: 0.4,
+                fill: false
+            }, {
+                label: 'Temp °C',
+                data: [],
+                borderColor: '#8b5cf6',
+                backgroundColor: 'rgba(139, 92, 246, 0.1)',
+                tension: 0.4,
+                fill: false,
+                yAxisID: 'y1'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    labels: { color: '#e5e7eb', font: { size: 11 } }
+                }
+            },
+            scales: {
+                x: {
+                    ticks: { color: '#9ca3af', font: { size: 10 } },
+                    grid: { color: 'rgba(255,255,255,0.1)' }
+                },
+                y: {
+                    min: 0,
+                    max: 100,
+                    position: 'left',
+                    ticks: { color: '#9ca3af', font: { size: 10 } },
+                    grid: { color: 'rgba(255,255,255,0.1)' }
+                },
+                y1: {
+                    type: 'linear',
+                    position: 'right',
+                    min: 30,
+                    max: 80,
+                    ticks: { color: '#9ca3af', font: { size: 10 } },
+                    grid: { display: false }
+                }
+            }
+        }
+    });
+}
+
+function loadHistoricalData() {
+    fetch('/api/system/history?hours=24')
         .then(response => response.json())
         .then(data => {
-            // CPU
-            if(document.getElementById('cpu-percent')) {
-                document.getElementById('cpu-percent').textContent = data.cpu_percent + '%';
-                document.getElementById('cpu-bar').style.width = data.cpu_percent + '%';
-                document.getElementById('cpu-temp').textContent = data.temperature + '°C';
+            console.log('Otrzymane dane historyczne:', data.length, 'rekordów');
+            
+            if (!data || data.length === 0) {
+                console.log('Brak danych historycznych - wyświetlam X');
+                // Pokaż "X" jako brak danych
+                historyChart.data.labels = ['Brak danych'];
+                historyChart.data.datasets[0].data = ['X'];
+                historyChart.data.datasets[1].data = ['X'];
+                historyChart.data.datasets[2].data = ['X'];
+                historyChart.update();
+                return;
             }
             
-            // RAM
-            if(document.getElementById('memory-used')) {
-                document.getElementById('memory-used').textContent = data.memory.used + ' GB';
-                document.getElementById('memory-total').textContent = data.memory.total + ' GB';
-                document.getElementById('memory-percent').textContent = data.memory.percent + '%';
-                document.getElementById('memory-bar').style.width = data.memory.percent + '%';
-            }
+            // Grupuj dane według pełnych godzin
+            const hourlyGroups = {};
             
-            // Dysk
-            if(document.getElementById('disk-used')) {
-                document.getElementById('disk-used').textContent = data.disk.used + ' GB';
-                document.getElementById('disk-total').textContent = data.disk.total + ' GB';
-                document.getElementById('disk-percent').textContent = data.disk.percent + '%';
-                document.getElementById('disk-bar').style.width = data.disk.percent + '%';
-            }
+            data.forEach(item => {
+                const date = new Date(item.timestamp);
+                const hourKey = date.getFullYear() + '-' + 
+                               String(date.getMonth() + 1).padStart(2, '0') + '-' + 
+                               String(date.getDate()).padStart(2, '0') + ' ' + 
+                               String(date.getHours()).padStart(2, '0') + ':00';
+                
+                if (!hourlyGroups[hourKey]) {
+                    hourlyGroups[hourKey] = [];
+                }
+                hourlyGroups[hourKey].push(item);
+            });
             
-            // System
-            if(document.getElementById('uptime')) {
-                document.getElementById('uptime').textContent = data.uptime;
-                document.getElementById('timestamp').textContent = data.timestamp;
-            }
+            // Uśrednij dane dla każdej godziny
+            const hourlyData = Object.keys(hourlyGroups)
+                .sort()
+                .slice(-24) // Ostatnie 24 godziny
+                .map(hourKey => {
+                    const hourItems = hourlyGroups[hourKey];
+                    const avg = {
+                        timestamp: hourKey,
+                        cpu_percent: hourItems.reduce((sum, item) => sum + item.cpu_percent, 0) / hourItems.length,
+                        ram_percent: hourItems.reduce((sum, item) => sum + item.ram_percent, 0) / hourItems.length,
+                        temperature: hourItems.reduce((sum, item) => sum + item.temperature, 0) / hourItems.length
+                    };
+                    return avg;
+                });
             
-            // Status
-            if(document.getElementById('connection-status')) {
-                document.getElementById('connection-status').innerHTML = '🟢 Połączony';
-            }
+            console.log('Przetworzone dane godzinowe:', hourlyData.length, 'godzin');
+            updateHistoryChart(hourlyData);
         })
         .catch(error => {
-            console.error('Błąd:', error);
-            if(document.getElementById('connection-status')) {
-                document.getElementById('connection-status').innerHTML = '🔴 Błąd połączenia';
-            }
+            console.log('Historia niedostępna:', error);
+            // W przypadku błędu pokaż X
+            historyChart.data.labels = ['Błąd połączenia'];
+            historyChart.data.datasets[0].data = ['X'];
+            historyChart.data.datasets[1].data = ['X'];
+            historyChart.data.datasets[2].data = ['X'];
+            historyChart.update();
         });
 }
 
-// KLUCZOWE - automatyczne odświeżanie
-updateDashboard();                  
-setInterval(updateDashboard, 1000); 
+function updateHistoryChart(hourlyData) {
+    if (!hourlyData || hourlyData.length === 0) {
+        historyChart.data.labels = ['Brak danych'];
+        historyChart.data.datasets[0].data = ['X'];
+        historyChart.data.datasets[1].data = ['X'];
+        historyChart.data.datasets[2].data = ['X'];
+        historyChart.update();
+        return;
+    }
+    
+    historyChart.data.labels = hourlyData.map(item => {
+        const date = new Date(item.timestamp);
+        return String(date.getHours()).padStart(2, '0') + ':00';
+    });
+    
+    historyChart.data.datasets[0].data = hourlyData.map(item => item.cpu_percent);
+    historyChart.data.datasets[1].data = hourlyData.map(item => item.ram_percent);
+    historyChart.data.datasets[2].data = hourlyData.map(item => item.temperature);
+    
+    historyChart.update();
+}
+
+function updateChart(data) {
+    if (!cpuChart) return;
+    
+    const now = new Date().toLocaleTimeString();
+    
+    cpuChart.data.labels.push(now);
+    cpuChart.data.datasets[0].data.push(data.cpu_percent);
+    cpuChart.data.datasets[1].data.push(data.memory.percent);
+    
+    // Zachowaj tylko ostatnie 20 punktów
+    if (cpuChart.data.labels.length > 20) {
+        cpuChart.data.labels.shift();
+        cpuChart.data.datasets[0].data.shift();
+        cpuChart.data.datasets[1].data.shift();
+    }
+    
+    cpuChart.update('none');
+}
+
+function formatProcesses(processes, containerId) {
+    const container = document.getElementById(containerId);
+    if (!processes || processes.length === 0) {
+        container.innerHTML = '<div class="metric"><span>Brak danych</span></div>';
+        return;
+    }
+    
+    function translateProcessName(proc) {
+        const name = proc.name.toLowerCase();
+        const pid = proc.pid;
+        
+        // Identyfikacja procesów GINGERITY.SPACE
+        if (name === 'cloudflared') {
+            return 'Cloudflare Tunnel';
+        }
+        
+        if (name === 'gunicorn') {
+            // Rozróżnij master vs worker
+            if (proc.memory_mb > 30) {
+                return 'Dashboard Master';
+            } else {
+                return 'Dashboard Worker';
+            }
+        }
+        
+        if (name === 'filebrowser') {
+            return 'File Manager';
+        }
+        
+        if (name.includes('libcamera')) {
+            return 'Kamera HD';
+        }
+        
+        if (name === 'nginx') {
+            return 'Web Server';
+        }
+        
+        if (name === 'sshd') {
+            return 'SSH Daemon';
+        }
+        
+        if (name === 'systemd') {
+            return 'System Manager';
+        }
+        
+        if (name === 'python3' || name === 'python') {
+            return 'Python App';
+        }
+        
+        // Procesy systemowe
+        if (name === 'kthreadd') return 'Kernel Threads';
+        if (name === 'ksoftirqd/0') return 'Kernel Soft IRQ';
+        if (name === 'rcu_preempt') return 'Kernel RCU';
+        
+        // Jeśli nie rozpoznano, zostaw oryginalne
+        return proc.name;
+    }
+    
+    container.innerHTML = processes.map(proc => 
+        `<div class="metric">
+            <span>${translateProcessName(proc)} (${proc.pid})</span>
+            <span>${containerId.includes('cpu') ? proc.cpu_percent.toFixed(1) + '%' : proc.memory_mb + ' MB'}</span>
+        </div>`
+    ).join('');
+}
+
+function updateDashboard() {
+    fetch('/api/system')
+        .then(response => response.ok ? response.json() : Promise.reject('Błąd sieci'))
+        .then(data => {
+            // Istniejące metryki
+            document.getElementById('cpu-percent').textContent = data.cpu_percent.toFixed(1) + '%';
+            document.getElementById('cpu-bar').style.width = data.cpu_percent + '%';
+            document.getElementById('cpu-temp').textContent = data.temperature.toFixed(1) + '°C';
+            document.getElementById('memory-percent').textContent = data.memory.percent.toFixed(1) + '%';
+            document.getElementById('memory-bar').style.width = data.memory.percent + '%';
+            document.getElementById('disk-percent').textContent = data.disk.percent.toFixed(1) + '%';
+            document.getElementById('disk-bar').style.width = data.disk.percent + '%';
+            
+            // Nowe metryki
+            document.getElementById('load-avg').textContent = data.load_avg || '--';
+            document.getElementById('memory-free').textContent = (data.memory.available / 1024 / 1024 / 1024).toFixed(1) + ' GB';
+            document.getElementById('disk-free').textContent = (data.disk.free / 1024 / 1024 / 1024).toFixed(1) + ' GB';
+            
+            // Metryki sieciowe
+            if (data.network) {
+                document.getElementById('network-sent').textContent = data.network.bytes_sent_mb + ' MB';
+                document.getElementById('network-recv').textContent = data.network.bytes_recv_mb + ' MB';
+                document.getElementById('active-connections').textContent = data.network.active_connections;
+            }
+            
+            // Ping
+            if (data.ping && data.ping.success) {
+                document.getElementById('ping-time').textContent = data.ping.ping_ms + ' ms';
+                document.getElementById('ping-time').style.color = data.ping.ping_ms > 100 ? '#f59e0b' : '#10b981';
+            } else {
+                document.getElementById('ping-time').textContent = 'Błąd';
+                document.getElementById('ping-time').style.color = '#ef4444';
+            }
+            
+            // Top procesy
+            if (data.processes) {
+                formatProcesses(data.processes.top_cpu, 'top-cpu-processes');
+                formatProcesses(data.processes.top_ram, 'top-ram-processes');
+            }
+            
+            // Uptime
+            document.getElementById('system-uptime').textContent = data.uptime || '--';
+            
+            // Status połączenia
+            document.getElementById('connection-status').innerHTML = '🟢 Połączony';
+            
+            // Aktualizuj wykres
+            updateChart(data);
+        })
+        .catch(error => {
+            console.error('Błąd:', error);
+            document.getElementById('connection-status').innerHTML = '🔴 Błąd połączenia';
+        });
+}
+
+// Inicjalizacja
+document.addEventListener('DOMContentLoaded', function() {
+    initCharts();
+    loadHistoricalData(); // Załaduj historię na start
+    updateDashboard();
+    
+    // Real-time co 10 sekund
+    setInterval(updateDashboard, 10000);
+    
+    // Historia co 30 minut
+    setInterval(loadHistoricalData, 1800000);
+});
 </script>
 </body>
 </html>
