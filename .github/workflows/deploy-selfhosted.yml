@@ -49,7 +49,12 @@ jobs:
         
         # Aktualizacja kodu (GitHub Actions już pobrał najnowszy kod)
         echo "📥 Updating code..."
-        sudo cp -r $GITHUB_WORKSPACE/* /var/www/gingerity.space/
+        # Usuń pliki które mogą kolidować
+        sudo find $GITHUB_WORKSPACE -name "*.log" -delete 2>/dev/null || true
+        sudo find $GITHUB_WORKSPACE -name "_work" -type d -exec rm -rf {} + 2>/dev/null || true
+        
+        # Skopiuj tylko pliki aplikacji (pomijając runner artifacts)
+        sudo rsync -av --exclude='actions-runner' --exclude='_work' --exclude='.git' $GITHUB_WORKSPACE/ /var/www/gingerity.space/
         
         # Uprawnienia
         echo "🔒 Setting permissions..."
