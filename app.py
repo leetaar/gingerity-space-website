@@ -261,7 +261,7 @@ CAMERA_QUALITY = int(os.getenv('CAMERA_QUALITY', '90'))
 PHOTOS_MAX = int(os.getenv('PHOTOS_MAX', '20'))
 
 # Katalog na zdjęcia
-PHOTOS_DIR = "/home/marcin/dashboard/static/photos"
+PHOTOS_DIR = "/var/www/gingerity.space/static/photos"
 os.makedirs(PHOTOS_DIR, exist_ok=True)
 
 # Zmienne dla streamu

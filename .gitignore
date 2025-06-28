@@ -1,2 +1,15 @@
+# Środowisko wirtualne
+venv/
+
+# Pliki tymczasowe Pythona
+__pycache__/
+*.pyc
+
+# Pliki konfiguracyjne środowiska
 .env
-testignore
+
+# Pliki backupu edytora
+*.backup
+
+# Plik socketa Gunicorna
+dashboard.sock
