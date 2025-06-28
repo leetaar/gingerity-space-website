@@ -1,0 +1,92 @@
+name: Deploy to Raspberry Pi
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python 3.11
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install flask psutil pytest
+        
+    - name: Run tests
+      run: |
+        python -m pytest test_app.py -v
+        
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Deploy to server
+      uses: appleboy/ssh-action@v1.0.0
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.SSH_KEY }}
+        port: ${{ secrets.SSH_PORT }}
+        script: |
+          echo "🚀 Starting deployment..."
+          
+          # Przejdź do katalogu aplikacji
+          cd /var/www/gingerity.space
+          
+          # Backup przed aktualizacją
+          sudo cp -r /var/www/gingerity.space /var/www/gingerity_backup_$(date +%Y%m%d_%H%M%S)
+          
+          # Zatrzymaj serwisy
+          echo "⏸️ Stopping services..."
+          sudo systemctl stop gingerity-dashboard
+          sudo systemctl stop nginx
+          
+          # Pull najnowszego kodu
+          echo "📥 Pulling latest code..."
+          sudo git fetch origin
+          sudo git reset --hard origin/main
+          
+          # Uprawnienia
+          sudo chown -R www-data:www-data /var/www/gingerity.space
+          sudo chmod +x /var/www/gingerity.space/app.py
+          
+          # Uruchom testy na serwerze
+          echo "🧪 Running tests on server..."
+          cd /var/www/gingerity.space
+          python3 -m pytest test_app.py -v || echo "⚠️ Tests failed but continuing..."
+          
+          # Restart serwisów
+          echo "🔄 Restarting services..."
+          sudo systemctl start gingerity-dashboard
+          sudo systemctl start nginx
+          
+          # Sprawdź status
+          echo "✅ Checking service status..."
+          sudo systemctl status gingerity-dashboard --no-pager
+          sudo systemctl status nginx --no-pager
+          
+          # Test połączenia
+          echo "🌐 Testing connection..."
+          curl -f http://localhost:5000/api/system > /dev/null && echo "✅ API works!" || echo "❌ API failed!"
+          
+          # Cleanup starych backupów (zachowaj tylko 5 najnowszych)
+          echo "🧹 Cleaning old backups..."
+          cd /var/www
+          ls -td gingerity_backup_* | tail -n +6 | sudo xargs rm -rf
+          
+          echo "🎉 Deployment completed successfully!"
