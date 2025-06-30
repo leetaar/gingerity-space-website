@@ -53,9 +53,8 @@
 <body>
     <div class="app-container">
         <header class="app-header">
-            <a href="{{ url_for('gablotka') }}" title="Zobacz gablotkę osiągnięć">
-                <img src="{{ url_for('static', filename='LOGO.png') }}" alt="Logo Gingerity">
-            </a>
+            <!-- Usunięto odnośnik z logo -->
+            <img src="{{ url_for('static', filename='LOGO.png') }}" alt="Logo Gingerity">
         </header>
         
         <main class="main-content">
@@ -152,7 +151,7 @@
 
                 <div class="card card-clickable" onclick="window.location.href='/cam'">
                     <h3><i class="fas fa-video"></i> Kamera</h3> 
-                    <p>Dostęp do podglądu z kamery i galerii zdjęć.</p>
+                    <p>Dostęp do podglądu z kamery.</p>
                     <span class="card-hint">Kliknij, aby przejść &rarr;</span>
                 </div>
 
@@ -165,9 +164,19 @@
             </div>
         </main>
         
-        <footer class="app-footer">
-            Status połączenia: <span id="connection-status">🟢 Połączony</span> | 
-            Uptime: <span id="system-uptime">--</span>
+        <!-- ZMIENIONA STOPKA -->
+        <footer class="app-footer" style="border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 1.5rem; margin-top: 1.5rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto;">
+                <div>
+                    Status połączenia: <span id="connection-status">🟢 Połączony</span> | 
+                    Uptime: <span id="system-uptime">--</span>
+                </div>
+                <div>
+                    <a href="{{ url_for('progress') }}" style="color: #9ca3af; text-decoration: none; transition: color 0.2s ease;" onmouseover="this.style.color='#e5e7eb'" onmouseout="this.style.color='#9ca3af'">
+                        Zobacz postępy projektu &rarr;
+                    </a>
+                </div>
+            </div>
         </footer>
     </div>
 
@@ -283,63 +292,18 @@ function initCharts() {
 }
 
 function loadHistoricalData() {
-    fetch('/api/system/history?hours=24')
-        .then(response => response.json())
+    fetch('/api/system/history')
+        .then(response => response.ok ? response.json() : Promise.reject('Błąd sieci'))
         .then(data => {
-            console.log('Otrzymane dane historyczne:', data.length, 'rekordów');
-            
-            if (!data || data.length === 0) {
-                console.log('Brak danych historycznych - wyświetlam X');
-                // Pokaż "X" jako brak danych
-                historyChart.data.labels = ['Brak danych'];
-                historyChart.data.datasets[0].data = ['X'];
-                historyChart.data.datasets[1].data = ['X'];
-                historyChart.data.datasets[2].data = ['X'];
-                historyChart.update();
-                return;
-            }
-            
-            // Grupuj dane według pełnych godzin
-            const hourlyGroups = {};
-            
-            data.forEach(item => {
-                const date = new Date(item.timestamp);
-                const hourKey = date.getFullYear() + '-' + 
-                               String(date.getMonth() + 1).padStart(2, '0') + '-' + 
-                               String(date.getDate()).padStart(2, '0') + ' ' + 
-                               String(date.getHours()).padStart(2, '0') + ':00';
-                
-                if (!hourlyGroups[hourKey]) {
-                    hourlyGroups[hourKey] = [];
-                }
-                hourlyGroups[hourKey].push(item);
-            });
-            
-            // Uśrednij dane dla każdej godziny
-            const hourlyData = Object.keys(hourlyGroups)
-                .sort()
-                .slice(-24) // Ostatnie 24 godziny
-                .map(hourKey => {
-                    const hourItems = hourlyGroups[hourKey];
-                    const avg = {
-                        timestamp: hourKey,
-                        cpu_percent: hourItems.reduce((sum, item) => sum + item.cpu_percent, 0) / hourItems.length,
-                        ram_percent: hourItems.reduce((sum, item) => sum + item.ram_percent, 0) / hourItems.length,
-                        temperature: hourItems.reduce((sum, item) => sum + item.temperature, 0) / hourItems.length
-                    };
-                    return avg;
-                });
-            
-            console.log('Przetworzone dane godzinowe:', hourlyData.length, 'godzin');
-            updateHistoryChart(hourlyData);
+            console.log('Otrzymane dane historyczne (zagregowane):', data.length, 'rekordów');
+            updateHistoryChart(data.slice(-24));
         })
         .catch(error => {
             console.log('Historia niedostępna:', error);
-            // W przypadku błędu pokaż X
             historyChart.data.labels = ['Błąd połączenia'];
-            historyChart.data.datasets[0].data = ['X'];
-            historyChart.data.datasets[1].data = ['X'];
-            historyChart.data.datasets[2].data = ['X'];
+            historyChart.data.datasets[0].data = [];
+            historyChart.data.datasets[1].data = [];
+            historyChart.data.datasets[2].data = [];
             historyChart.update();
         });
 }
@@ -347,9 +311,9 @@ function loadHistoricalData() {
 function updateHistoryChart(hourlyData) {
     if (!hourlyData || hourlyData.length === 0) {
         historyChart.data.labels = ['Brak danych'];
-        historyChart.data.datasets[0].data = ['X'];
-        historyChart.data.datasets[1].data = ['X'];
-        historyChart.data.datasets[2].data = ['X'];
+        historyChart.data.datasets[0].data = [];
+        historyChart.data.datasets[1].data = [];
+        historyChart.data.datasets[2].data = [];
         historyChart.update();
         return;
     }
@@ -375,7 +339,6 @@ function updateChart(data) {
     cpuChart.data.datasets[0].data.push(data.cpu_percent);
     cpuChart.data.datasets[1].data.push(data.memory.percent);
     
-    // Zachowaj tylko ostatnie 20 punktów
     if (cpuChart.data.labels.length > 20) {
         cpuChart.data.labels.shift();
         cpuChart.data.datasets[0].data.shift();
@@ -394,52 +357,17 @@ function formatProcesses(processes, containerId) {
     
     function translateProcessName(proc) {
         const name = proc.name.toLowerCase();
-        const pid = proc.pid;
-        
-        // Identyfikacja procesów GINGERITY.SPACE
-        if (name === 'cloudflared') {
-            return 'Cloudflare Tunnel';
-        }
-        
-        if (name === 'gunicorn') {
-            // Rozróżnij master vs worker
-            if (proc.memory_mb > 30) {
-                return 'Dashboard Master';
-            } else {
-                return 'Dashboard Worker';
-            }
-        }
-        
-        if (name === 'filebrowser') {
-            return 'File Manager';
-        }
-        
-        if (name.includes('libcamera')) {
-            return 'Kamera HD';
-        }
-        
-        if (name === 'nginx') {
-            return 'Web Server';
-        }
-        
-        if (name === 'sshd') {
-            return 'SSH Daemon';
-        }
-        
-        if (name === 'systemd') {
-            return 'System Manager';
-        }
-        
-        if (name === 'python3' || name === 'python') {
-            return 'Python App';
-        }
-        
-        // Procesy systemowe
+        if (name === 'cloudflared') return 'Cloudflare Tunnel';
+        if (name === 'gunicorn') return proc.memory_mb > 30 ? 'Dashboard Master' : 'Dashboard Worker';
+        if (name === 'filebrowser') return 'File Manager';
+        if (name.includes('libcamera')) return 'Kamera HD';
+        if (name === 'nginx') return 'Web Server';
+        if (name === 'sshd') return 'SSH Daemon';
+        if (name === 'systemd') return 'System Manager';
+        if (name === 'python3' || name === 'python') return 'Python App';
         if (name === 'kthreadd') return 'Kernel Threads';
         if (name === 'ksoftirqd/0') return 'Kernel Soft IRQ';
         if (name === 'rcu_preempt') return 'Kernel RCU';
-        
-        // Jeśli nie rozpoznano, zostaw oryginalne
         return proc.name;
     }
     
@@ -455,7 +383,6 @@ function updateDashboard() {
     fetch('/api/system')
         .then(response => response.ok ? response.json() : Promise.reject('Błąd sieci'))
         .then(data => {
-            // Istniejące metryki
             document.getElementById('cpu-percent').textContent = data.cpu_percent.toFixed(1) + '%';
             document.getElementById('cpu-bar').style.width = data.cpu_percent + '%';
             document.getElementById('cpu-temp').textContent = data.temperature.toFixed(1) + '°C';
@@ -463,20 +390,16 @@ function updateDashboard() {
             document.getElementById('memory-bar').style.width = data.memory.percent + '%';
             document.getElementById('disk-percent').textContent = data.disk.percent.toFixed(1) + '%';
             document.getElementById('disk-bar').style.width = data.disk.percent + '%';
-            
-            // Nowe metryki
             document.getElementById('load-avg').textContent = data.load_avg || '--';
             document.getElementById('memory-free').textContent = (data.memory.available / 1024 / 1024 / 1024).toFixed(1) + ' GB';
             document.getElementById('disk-free').textContent = (data.disk.free / 1024 / 1024 / 1024).toFixed(1) + ' GB';
             
-            // Metryki sieciowe
             if (data.network) {
                 document.getElementById('network-sent').textContent = data.network.bytes_sent_mb + ' MB';
                 document.getElementById('network-recv').textContent = data.network.bytes_recv_mb + ' MB';
                 document.getElementById('active-connections').textContent = data.network.active_connections;
             }
             
-            // Ping
             if (data.ping && data.ping.success) {
                 document.getElementById('ping-time').textContent = data.ping.ping_ms + ' ms';
                 document.getElementById('ping-time').style.color = data.ping.ping_ms > 100 ? '#f59e0b' : '#10b981';
@@ -485,19 +408,13 @@ function updateDashboard() {
                 document.getElementById('ping-time').style.color = '#ef4444';
             }
             
-            // Top procesy
             if (data.processes) {
                 formatProcesses(data.processes.top_cpu, 'top-cpu-processes');
                 formatProcesses(data.processes.top_ram, 'top-ram-processes');
             }
             
-            // Uptime
             document.getElementById('system-uptime').textContent = data.uptime || '--';
-            
-            // Status połączenia
             document.getElementById('connection-status').innerHTML = '🟢 Połączony';
-            
-            // Aktualizuj wykres
             updateChart(data);
         })
         .catch(error => {
@@ -506,16 +423,11 @@ function updateDashboard() {
         });
 }
 
-// Inicjalizacja
 document.addEventListener('DOMContentLoaded', function() {
     initCharts();
-    loadHistoricalData(); // Załaduj historię na start
+    loadHistoricalData();
     updateDashboard();
-    
-    // Real-time co 10 sekund
     setInterval(updateDashboard, 10000);
-    
-    // Historia co 30 minut
     setInterval(loadHistoricalData, 1800000);
 });
 </script>

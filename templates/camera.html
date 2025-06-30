@@ -23,34 +23,23 @@
             <div class="card">
                  <h3><i class="fas fa-video"></i> Podgląd na żywo</h3>
                  <div class="camera-feed">
-                     <img id="camera-stream" src="" alt="Camera stream">
-                     <div id="stream-placeholder" class="stream-placeholder">Stream jest offline</div>
+                     <img id="camera-stream" src="" alt="Camera stream" style="display: none;">
+                     <div id="stream-placeholder" class="stream-placeholder" style="display: block;">Stream jest offline.</div>
                  </div>
             </div>
 
             <div class="card">
                 <h3><i class="fas fa-cogs"></i> Sterowanie</h3>
-                <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 15px;">
-                    <button id="toggle-stream-btn" class="btn btn-danger"><i class="fas fa-stop"></i> Zatrzymaj stream</button>
-                    <button id="take-photo-btn" class="btn" onclick="takePhoto()">📸 Zrób zdjęcie</button>
+                <p>Kliknij przycisk, aby włączyć lub wyłączyć podgląd z kamery.</p>
+                <div class="grid" style="grid-template-columns: 1fr; gap: 15px; margin-top: 1rem;">
+                    <button id="toggle-stream-btn" class="btn btn-success"><i class="fas fa-play"></i> Włącz stream</button>
                 </div>
-                <h3 style="margin-top: 2rem;"><i class="fas fa-images"></i> Galeria</h3>
-                <button id="open-gallery-btn" class="btn" style="width: 100%; margin-top: 1rem;"><i class="fas fa-folder-open"></i> Otwórz galerię</button>
             </div>
         </main>
     </div>
 
-    <div id="gallery-modal" class="gallery-modal">
-        <div class="gallery-content">
-            <span id="gallery-close" class="gallery-close">&times;</span>
-            <span id="gallery-prev" class="gallery-nav">&#10094;</span>
-            <img id="gallery-image" class="gallery-image" src="" alt="Powiększone zdjęcie">
-            <span id="gallery-next" class="gallery-nav">&#10095;</span>
-        </div>
-    </div>
-
 <script>
-let isStreamActive = true;
+let isStreamActive = false;
 const streamImg = document.getElementById('camera-stream');
 const placeholder = document.getElementById('stream-placeholder');
 const toggleBtn = document.getElementById('toggle-stream-btn');
@@ -59,7 +48,7 @@ const streamUrl = "{{ url_for('camera_stream') }}";
 function stopStreamUI() {
     streamImg.style.display = 'none';
     placeholder.style.display = 'block';
-    streamImg.src = '#';
+    streamImg.src = '#'; // Zatrzymuje pobieranie streamu
     toggleBtn.innerHTML = '<i class="fas fa-play"></i> Włącz stream';
     toggleBtn.classList.remove('btn-danger');
     toggleBtn.classList.add('btn-success');
@@ -69,6 +58,7 @@ function stopStreamUI() {
 function startStreamUI() {
     placeholder.style.display = 'none';
     streamImg.style.display = 'block';
+    // Dodajemy unikalny timestamp, aby zapobiec cache'owaniu przez przeglądarkę
     streamImg.src = streamUrl + '?timestamp=' + new Date().getTime();
     toggleBtn.innerHTML = '<i class="fas fa-stop"></i> Zatrzymaj stream';
     toggleBtn.classList.remove('btn-success');
@@ -78,7 +68,8 @@ function startStreamUI() {
 
 function toggleStream() {
     if (isStreamActive) {
-        fetch("{{ url_for('stop_stream') }}", { method: 'POST' }).then(() => stopStreamUI());
+        // Nie musimy już wołać /cam/stop_stream, wystarczy zmiana UI
+        stopStreamUI();
     } else {
         startStreamUI();
     }
@@ -86,97 +77,9 @@ function toggleStream() {
 
 toggleBtn.addEventListener('click', toggleStream);
 
-function takePhoto() {
-    const photoButton = document.getElementById('take-photo-btn');
-    photoButton.disabled = true;
-    photoButton.innerHTML = '⏳ Robię...';
-    const wasStreamActive = isStreamActive;
-    fetch('/cam/photo', { method: 'POST' })
-        .then(res => res.json())
-        .then(data => {
-            if (data.success) {
-                setTimeout(refreshPhotos, 500);
-                if (wasStreamActive) {
-                    stopStreamUI();
-                    setTimeout(startStreamUI, 500);
-                }
-            } else {
-                alert('Błąd robienia zdjęcia: ' + (data.error || 'Nieznany błąd'));
-            }
-        })
-        .finally(() => {
-            photoButton.disabled = false;
-            photoButton.innerHTML = '📸 Zrób zdjęcie';
-        });
-}
-
-// Reszta logiki galerii pozostaje bez zmian
-let currentPhotos = [];
-let currentIndex = 0;
-const galleryModal = document.getElementById('gallery-modal');
-const galleryImage = document.getElementById('gallery-image');
-const galleryClose = document.getElementById('gallery-close');
-const galleryPrev = document.getElementById('gallery-prev');
-const galleryNext = document.getElementById('gallery-next');
-const openGalleryBtn = document.getElementById('open-gallery-btn');
-
-function openGallery(index) {
-    if (currentPhotos.length === 0) { alert('Brak zdjęć w galerii.'); return; }
-    currentIndex = index;
-    galleryImage.src = currentPhotos[currentIndex].path;
-    galleryModal.classList.add('active');
-    window.addEventListener('keydown', handleKeyPress);
-}
-
-function closeGallery() {
-    galleryModal.classList.remove('active');
-    window.removeEventListener('keydown', handleKeyPress);
-}
-
-function showNextImage() {
-    if (currentPhotos.length === 0) return;
-    currentIndex = (currentIndex + 1) % currentPhotos.length;
-    galleryImage.src = currentPhotos[currentIndex].path;
-}
-
-function showPrevImage() {
-    if (currentPhotos.length === 0) return;
-    currentIndex = (currentIndex - 1 + currentPhotos.length) % currentPhotos.length;
-    galleryImage.src = currentPhotos[currentIndex].path;
-}
-
-function handleKeyPress(e) {
-    if (e.key === 'Escape') closeGallery();
-    if (e.key === 'ArrowRight') showNextImage();
-    if (e.key === 'ArrowLeft') showPrevImage();
-}
-
-galleryClose.addEventListener('click', closeGallery);
-galleryNext.addEventListener('click', showNextImage);
-galleryPrev.addEventListener('click', showPrevImage);
-openGalleryBtn.addEventListener('click', () => openGallery(0));
-galleryModal.addEventListener('click', (e) => {
-    if (e.target === galleryModal) closeGallery();
-});
-
-function refreshPhotos() {
-    fetch('/cam/photos')
-        .then(res => res.json())
-        .then(photos => {
-            currentPhotos = photos;
-            if (photos.length === 0) {
-                openGalleryBtn.disabled = true;
-                openGalleryBtn.innerHTML = '<i class="fas fa-images"></i> Brak zdjęć';
-            } else {
-                openGalleryBtn.disabled = false;
-                openGalleryBtn.innerHTML = `<i class="fas fa-folder-open"></i> Otwórz galerię (${photos.length})`;
-            }
-        });
-}
-
+// Strona startuje ze streamem wyłączonym
 document.addEventListener('DOMContentLoaded', () => {
-    refreshPhotos();
-    startStreamUI();
+    // Nic nie robimy przy starcie - czekamy na akcję użytkownika
 });
 </script>
 </body>

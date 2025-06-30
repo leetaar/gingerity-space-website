@@ -1,4 +1,4 @@
-# app.py (Wersja finalna, stabilna, bez gevent)
+# app.py (Finalna, uproszczona wersja, z linkiem do /progress)
 
 from flask import Flask, render_template, jsonify, Response, request, redirect, url_for, session, flash
 from werkzeug.security import check_password_hash
@@ -174,21 +174,13 @@ def api_system_history():
     hours = request.args.get('hours', 24, type=int)
     return jsonify(extended_monitor.get_history(hours))
 
+# ZMIENIONA TRASA DLA STRONY Z POSTĘPAMI
 @app.route('/progress')
 def progress():
     return render_template('progress.html')
 
 def generate_mjpeg_stream():
-    width = os.getenv('STREAM_WIDTH', '1920')
-    height = os.getenv('STREAM_HEIGHT', '1080')
-    fps = os.getenv('STREAM_FPS', '20')
-    roi = os.getenv('STREAM_ROI')
-
-    cmd = ['libcamera-vid', '--timeout', '0', '--width', width, '--height', height, '--framerate', fps, '--codec', 'mjpeg', '--output', '-', '--nopreview']
-    
-    if roi:
-        cmd.extend(['--roi', roi])
-
+    cmd = ['libcamera-vid', '--timeout', '0', '--width', '1920', '--height', '1080', '--framerate', '20', '--codec', 'mjpeg', '--output', '-', '--nopreview']
     process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     try:
         byte_stream = b''

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GINGERITY - Od zera do developera</title>
+    <title>Project Progress - GINGERITY.space</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -24,6 +24,7 @@ body {
     height: 100vh !important;
     margin: 0 !important;
     padding: 0 !important;
+    font-family: 'Inter', sans-serif;
 }
         .glass-card {
             background: rgba(31, 41, 55, 0.6);
@@ -118,17 +119,18 @@ body {
 <body class="text-gray-200 antialiased">
     <div class="page-container">
         
+        <!-- Header Section -->
         <div class="header-section">
             <div class="max-w-7xl mx-auto">
                 <div class="glass-card rounded-2xl p-6 text-center shadow-2xl">
                     <div class="flex justify-center items-center mb-4">
-                        <div class="w-16 h-16 bg-indigo-500/20 rounded-full flex items-center justify-center border-2 border-indigo-500">
+                        <a href="{{ url_for('dashboard') }}" class="w-16 h-16 bg-indigo-500/20 rounded-full flex items-center justify-center border-2 border-indigo-500 hover:border-indigo-400 transition-colors">
                             <svg class="w-10 h-10 text-indigo-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                               <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h7.5" />
                             </svg>
-                        </div>
+                        </a>
                     </div>
-                    <h1 class="text-3xl font-bold text-white mb-2">OD ZERA DO DEVELOPERA</h1>
+                    <h1 class="text-3xl font-bold text-white mb-2">PROJECT PROGRESS</h1>
                     <p class="text-indigo-400 font-semibold mb-2">GINGERITY.space</p>
                     <p class="text-gray-400">
                         Projekt serwera Raspberry Pi z dodatkowymi funkcjonalnościami.<br>
@@ -138,10 +140,12 @@ body {
             </div>
         </div>
 
+        <!-- Content Section -->
         <div class="content-section">
             <div class="max-w-7xl mx-auto h-full">
                 <div class="columns-container">
                     
+                    <!-- Left Column (Przywrócona pełna lista) -->
                     <div class="column">
                         <div class="column-header">
                             <h2 class="text-2xl font-bold text-white text-center">Ukończone Lekcje</h2>
@@ -216,13 +220,14 @@ body {
                                     <div class="glass-card rounded-lg p-4 border-dashed border-indigo-500">
                                         <p class="text-sm text-indigo-400 font-medium">Lekcja 10</p>
                                         <h3 class="text-lg font-semibold text-white mt-1">Stabilizacja Systemu i Debugging</h3>
-                                        <p class="text-gray-400 mt-2 text-sm">Zaawansowana diagnostyka i rozwiązywanie problemów systemowych. Ustabilizowanie Gunicorn, Nginx i procesów aplikacji. Poprawna konfiguracja workerów asynchronicznych.</p>
+                                        <p class="text-gray-400 mt-2 text-sm">Zaawansowana diagnostyka i rozwiązywanie problemów systemowych. Ustabilizowanie Gunicorn, Nginx i procesów aplikacji. Poprawna konfiguracja workerów.</p>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
 
+                    <!-- Right Column -->
                     <div class="column">
                        <div class="column-header">
                            <h2 class="text-2xl font-bold text-white text-center">Planowane Lekcje</h2>
@@ -233,7 +238,7 @@ body {
 
                                <div class="relative timeline-item future-item pb-6">
                                    <div class="glass-card rounded-lg p-4 border-gray-600">
-                                       <p class="text-sm text-gray-400 font-medium">Lekcja 11: Wzmocnienie Bezpieczeństwa Sieciowego</p>
+                                       <p class="text-sm text-gray-400 font-medium">Lekcja 11: Wzmocnienie Bezpieczeństwa (Hardening)</p>
                                        <p class="text-gray-400 mt-2 text-sm">Konfiguracja firewalla UFW i wdrożenie Fail2Ban w celu zabezpieczenia serwera przed atakami i nieautoryzowanym dostępem.</p>
                                        <p class="text-gray-500 mt-2 text-xs">Technologie: UFW, Fail2Ban</p>
                                    </div>
@@ -241,23 +246,15 @@ body {
 
                                <div class="relative timeline-item future-item pb-6">
                                    <div class="glass-card rounded-lg p-4 border-gray-600">
-                                       <p class="text-sm text-gray-400 font-medium">Lekcja 12: Wprowadzenie do Konteneryzacji</p>
-                                       <p class="text-gray-400 mt-2 text-sm">"Spakowanie" aplikacji Dashboard i File Browser do izolowanych kontenerów za pomocą Dockerfile.</p>
-                                       <p class="text-gray-500 mt-2 text-xs">Technologie: Docker, Dockerfile</p>
-                                   </div>
-                               </div>
-
-                               <div class="relative timeline-item future-item pb-6">
-                                   <div class="glass-card rounded-lg p-4 border-gray-600">
-                                       <p class="text-sm text-gray-400 font-medium">Lekcja 13: Zarządzanie Stosem Aplikacji</p>
-                                       <p class="text-gray-400 mt-2 text-sm">Zdefiniowanie całej infrastruktury jako kodu w pliku docker-compose.yml i zastąpienie usług systemd.</p>
-                                       <p class="text-gray-500 mt-2 text-xs">Technologie: Docker Compose</p>
+                                       <p class="text-sm text-gray-400 font-medium">Lekcja 12-13: Konteneryzacja (Docker)</p>
+                                       <p class="text-gray-400 mt-2 text-sm">Spakowanie wszystkich usług do kontenerów i zarządzanie całym stosem za pomocą jednego pliku konfiguracyjnego.</p>
+                                       <p class="text-gray-500 mt-2 text-xs">Technologie: Docker, Docker Compose</p>
                                    </div>
                                </div>
                     
                                <div class="relative timeline-item future-item pb-6">
                                    <div class="glass-card rounded-lg p-4 border-gray-600">
-                                       <p class="text-sm text-gray-400 font-medium">Lekcja 14: Profesjonalny Monitoring i Wizualizacja</p>
+                                       <p class="text-sm text-gray-400 font-medium">Lekcja 14: Profesjonalny Monitoring</p>
                                        <p class="text-gray-400 mt-2 text-sm">Zastąpienie obecnych wykresów stosem Prometheus + Grafana. Budowa zaawansowanego, interaktywnego dashboardu.</p>
                                        <p class="text-gray-500 mt-2 text-xs">Technologie: Prometheus, Grafana</p>
                                    </div>
@@ -270,6 +267,31 @@ body {
                                        <p class="text-gray-500 mt-2 text-xs">Technologie: Pi-hole, WireGuard</p>
                                    </div>
                                </div>
+
+                               <div class="relative timeline-item future-item pb-6">
+                                   <div class="glass-card rounded-lg p-4 border-gray-600">
+                                       <p class="text-sm text-gray-400 font-medium">Lekcja 16: Prywatna Chmura Plików (NAS)</p>
+                                       <p class="text-gray-400 mt-2 text-sm">Uruchomienie usługi Samba w kontenerze. Udostępnienie dysku SSD jako dysku sieciowego (mapowanego) dla komputerów w sieci lokalnej.</p>
+                                       <p class="text-gray-500 mt-2 text-xs">Technologie: Samba, Docker</p>
+                                   </div>
+                               </div>
+
+                               <div class="relative timeline-item future-item pb-6">
+                                   <div class="glass-card rounded-lg p-4 border-gray-600">
+                                       <p class="text-sm text-gray-400 font-medium">Lekcja 17: Własny Serwer Pocztowy</p>
+                                       <p class="text-gray-400 mt-2 text-sm">Uruchomienie w pełni funkcjonalnego serwera pocztowego. Konfiguracja rekordów DNS (MX, SPF, DKIM) dla zapewnienia dostarczalności.</p>
+                                       <p class="text-gray-500 mt-2 text-xs">Technologie: Docker Mailserver</p>
+                                   </div>
+                               </div>
+                               
+                               <div class="relative timeline-item future-item pb-6">
+                                   <div class="glass-card rounded-lg p-4 border-dashed border-gray-500">
+                                       <p class="text-sm text-gray-400 font-medium">Etap Ekspercki</p>
+                                       <h3 class="text-lg font-semibold text-white mt-1">Orkiestracja i Zarządzanie Sekretami</h3>
+                                       <p class="text-gray-400 mt-2 text-sm">Wprowadzenie do zarządzania kontenerami przez interfejs graficzny Portainer. Implementacja bezpiecznego przechowywania haseł i kluczy API za pomocą Vault.</p>
+                                       <p class="text-gray-500 mt-2 text-xs">Cel: Bezpieczeństwo i zarządzanie na poziomie korporacyjnym.</p>
+                                   </div>
+                               </div>
                            </div>
                        </div>
                     </div>
@@ -277,6 +299,7 @@ body {
             </div>
         </div>
 
+        <!-- Footer Section -->
         <div class="footer-section">
             <div class="max-w-7xl mx-auto">
                 <footer class="text-center text-gray-500 text-sm">

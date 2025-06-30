@@ -118,6 +118,7 @@ body {
 <body class="text-gray-200 antialiased">
     <div class="page-container">
         
+        <!-- Header Section -->
         <div class="header-section">
             <div class="max-w-7xl mx-auto">
                 <div class="glass-card rounded-2xl p-6 text-center shadow-2xl">
@@ -138,10 +139,12 @@ body {
             </div>
         </div>
 
+        <!-- Content Section -->
         <div class="content-section">
             <div class="max-w-7xl mx-auto h-full">
                 <div class="columns-container">
                     
+                    <!-- Left Column -->
                     <div class="column">
                         <div class="column-header">
                             <h2 class="text-2xl font-bold text-white text-center">Ukończone Lekcje</h2>
@@ -149,6 +152,7 @@ body {
                         <div class="column-content scroll-column">
                             <div class="relative pl-8 pb-8">
                                 <div class="timeline-line"></div>
+
                                 <div class="relative timeline-item pb-6">
                                     <div class="glass-card rounded-lg p-4">
                                         <p class="text-sm text-indigo-400 font-medium">Lekcja 1</p>
@@ -156,6 +160,7 @@ body {
                                         <p class="text-gray-400 mt-2 text-sm">Flask app z metrykami systemowymi (CPU, RAM, temperatura). Kamera HD z libcamera-vid, autoryzacja, galeria zdjęć.</p>
                                     </div>
                                 </div>
+
                                 <div class="relative timeline-item pb-6">
                                     <div class="glass-card rounded-lg p-4">
                                         <p class="text-sm text-indigo-400 font-medium">Lekcja 2</p>
@@ -163,6 +168,7 @@ body {
                                         <p class="text-gray-400 mt-2 text-sm">Dostęp globalny przez tunel, SSH terminal w przeglądarce. Zero Trust security, pierwszy backup system.</p>
                                     </div>
                                 </div>
+
                                 <div class="relative timeline-item pb-6">
                                     <div class="glass-card rounded-lg p-4">
                                         <p class="text-sm text-indigo-400 font-medium">Lekcja 3</p>
@@ -170,6 +176,7 @@ body {
                                         <p class="text-gray-400 mt-2 text-sm">Powiadomienia email, Discord, Telegram. Progi temperaturowe i CPU. Cooldown 5 minut.</p>
                                     </div>
                                 </div>
+
                                 <div class="relative timeline-item pb-6">
                                     <div class="glass-card rounded-lg p-4">
                                         <p class="text-sm text-emerald-400 font-medium">Lekcja 4</p>
@@ -177,6 +184,7 @@ body {
                                         <p class="text-gray-400 mt-2 text-sm">fsarchiver - pełne obrazy partycji, kompresja zstd, automatyczny upload do Google Drive. Czas wykonania: 5 minut.</p>
                                     </div>
                                 </div>
+
                                 <div class="relative timeline-item pb-6">
                                     <div class="glass-card rounded-lg p-4">
                                         <p class="text-sm text-yellow-400 font-medium">Lekcja 5</p>
@@ -184,6 +192,7 @@ body {
                                         <p class="text-gray-400 mt-2 text-sm">Repozytorium Git, .gitignore, uwierzytelnienie SSH keys. Publiczne repo na GitHub.</p>
                                     </div>
                                 </div>
+
                                 <div class="relative timeline-item pb-6">
                                     <div class="glass-card rounded-lg p-4">
                                         <p class="text-sm text-yellow-400 font-medium">Lekcja 6</p>
@@ -191,6 +200,7 @@ body {
                                         <p class="text-gray-400 mt-2 text-sm">Migracja do /var/www/, production stack. 3 workers Gunicorn, proxy przez Nginx. Systemd services.</p>
                                     </div>
                                 </div>
+                                
                                 <div class="relative timeline-item pb-6">
                                     <div class="glass-card rounded-lg p-4">
                                         <p class="text-sm text-yellow-400 font-medium">Lekcja 7</p>
@@ -198,6 +208,7 @@ body {
                                         <p class="text-gray-400 mt-2 text-sm">files.gingerity.space, FileBrowser na porcie 8081. Rozwiązanie konfliktów SSH vs SFTP routing.</p>
                                     </div>
                                 </div>
+
                                 <div class="relative timeline-item pb-6">
                                     <div class="glass-card rounded-lg p-4">
                                         <p class="text-sm text-yellow-400 font-medium">Lekcja 8</p>
@@ -205,6 +216,7 @@ body {
                                         <p class="text-gray-400 mt-2 text-sm">ThreadPoolExecutor, asynchroniczne operacje kamery, eliminacja blocking calls. Poprawki security validation i error handling.</p>
                                     </div>
                                 </div>
+
                                 <div class="relative timeline-item pb-6">
                                     <div class="glass-card rounded-lg p-4">
                                         <p class="text-sm text-yellow-400 font-medium">Lekcja 9</p>
@@ -212,17 +224,19 @@ body {
                                         <p class="text-gray-400 mt-2 text-sm">CSS Variables, Inter font, flexbox layout. Responsive design bez scroll na desktop. Glass-morphism effects.</p>
                                     </div>
                                 </div>
+
                                 <div class="relative timeline-item pb-6">
                                     <div class="glass-card rounded-lg p-4 border-dashed border-indigo-500">
-                                        <p class="text-sm text-indigo-400 font-medium">Lekcja 10</p>
-                                        <h3 class="text-lg font-semibold text-white mt-1">Stabilizacja Systemu i Debugging</h3>
-                                        <p class="text-gray-400 mt-2 text-sm">Zaawansowana diagnostyka i rozwiązywanie problemów systemowych. Ustabilizowanie Gunicorn, Nginx i procesów aplikacji. Poprawna konfiguracja workerów asynchronicznych.</p>
+                                        <p class="text-sm text-indigo-400 font-medium">Status</p>
+                                        <h3 class="text-lg font-semibold text-white mt-1">System Produkcyjny</h3>
+                                        <p class="text-gray-400 mt-2 text-sm">Nginx+Gunicorn, multi-service architecture, async operations, disaster recovery. Działający system IoT.</p>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
 
+                    <!-- Right Column -->
                     <div class="column">
                        <div class="column-header">
                            <h2 class="text-2xl font-bold text-white text-center">Planowane Lekcje</h2>
@@ -233,41 +247,73 @@ body {
 
                                <div class="relative timeline-item future-item pb-6">
                                    <div class="glass-card rounded-lg p-4 border-gray-600">
-                                       <p class="text-sm text-gray-400 font-medium">Lekcja 11: Wzmocnienie Bezpieczeństwa Sieciowego</p>
-                                       <p class="text-gray-400 mt-2 text-sm">Konfiguracja firewalla UFW i wdrożenie Fail2Ban w celu zabezpieczenia serwera przed atakami i nieautoryzowanym dostępem.</p>
-                                       <p class="text-gray-500 mt-2 text-xs">Technologie: UFW, Fail2Ban</p>
+                                       <p class="text-sm text-gray-400 font-medium">Lekcja 10</p>
+                                       <h3 class="text-lg font-semibold text-white mt-1">Rozszerzony Monitoring</h3>
+                                       <p class="text-gray-400 mt-2 text-sm">Metryki sieciowe: przepustowość, ping, aktywne połączenia. Top procesów CPU/RAM. Historia danych w SQLite z wykresami Chart.js.</p>
+                                       <p class="text-gray-500 mt-2 text-xs">Cel: Analiza trendów zamiast tylko migawki</p>
                                    </div>
                                </div>
 
                                <div class="relative timeline-item future-item pb-6">
                                    <div class="glass-card rounded-lg p-4 border-gray-600">
-                                       <p class="text-sm text-gray-400 font-medium">Lekcja 12: Wprowadzenie do Konteneryzacji</p>
-                                       <p class="text-gray-400 mt-2 text-sm">"Spakowanie" aplikacji Dashboard i File Browser do izolowanych kontenerów za pomocą Dockerfile.</p>
-                                       <p class="text-gray-500 mt-2 text-xs">Technologie: Docker, Dockerfile</p>
+                                       <p class="text-sm text-gray-400 font-medium">Lekcja 11</p>
+                                       <h3 class="text-lg font-semibold text-white mt-1">Automatyzacja i Ciągła Integracja</h3>
+                                       <p class="text-gray-400 mt-2 text-sm">GitHub Actions: automatyczne wdrażanie po push. Pytest dla tras Flask. Aktualizacje bez przestoju.</p>
+                                       <p class="text-gray-500 mt-2 text-xs">Cel: Eliminacja ręcznego wdrażania</p>
                                    </div>
                                </div>
 
                                <div class="relative timeline-item future-item pb-6">
                                    <div class="glass-card rounded-lg p-4 border-gray-600">
-                                       <p class="text-sm text-gray-400 font-medium">Lekcja 13: Zarządzanie Stosem Aplikacji</p>
-                                       <p class="text-gray-400 mt-2 text-sm">Zdefiniowanie całej infrastruktury jako kodu w pliku docker-compose.yml i zastąpienie usług systemd.</p>
-                                       <p class="text-gray-500 mt-2 text-xs">Technologie: Docker Compose</p>
+                                       <p class="text-sm text-gray-400 font-medium">Lekcja 12</p>
+                                       <h3 class="text-lg font-semibold text-white mt-1">Baza Danych i Interfejs REST</h3>
+                                       <p class="text-gray-400 mt-2 text-sm">PostgreSQL zamiast plików. Interfejs REST z dokumentacją. Automatyczne archiwizowanie starych danych.</p>
+                                       <p class="text-gray-500 mt-2 text-xs">Cel: Skalowalna struktura danych</p>
                                    </div>
                                </div>
                     
                                <div class="relative timeline-item future-item pb-6">
                                    <div class="glass-card rounded-lg p-4 border-gray-600">
-                                       <p class="text-sm text-gray-400 font-medium">Lekcja 14: Profesjonalny Monitoring i Wizualizacja</p>
-                                       <p class="text-gray-400 mt-2 text-sm">Zastąpienie obecnych wykresów stosem Prometheus + Grafana. Budowa zaawansowanego, interaktywnego dashboardu.</p>
-                                       <p class="text-gray-500 mt-2 text-xs">Technologie: Prometheus, Grafana</p>
+                                       <p class="text-sm text-gray-400 font-medium">Lekcja 13</p>
+                                       <h3 class="text-lg font-semibold text-white mt-1">Wzmocnienie Bezpieczeństwa</h3>
+                                       <p class="text-gray-400 mt-2 text-sm">Automatyzacja certyfikatów SSL. Ograniczanie liczby żądań przeciw atakom. Dzienniki audytu - kto, kiedy, co robił.</p>
+                                       <p class="text-gray-500 mt-2 text-xs">Cel: Bezpieczeństwo na poziomie produkcyjnym</p>
                                    </div>
                                </div>
 
                                <div class="relative timeline-item future-item pb-6">
                                    <div class="glass-card rounded-lg p-4 border-gray-600">
-                                       <p class="text-sm text-gray-400 font-medium">Lekcja 15: Zaawansowane Usługi Sieciowe</p>
-                                       <p class="text-gray-400 mt-2 text-sm">Wdrożenie serwera DNS Pi-hole do ochrony sieci oraz konfiguracja prywatnej sieci VPN za pomocą WireGuard.</p>
-                                       <p class="text-gray-500 mt-2 text-xs">Technologie: Pi-hole, WireGuard</p>
+                                       <p class="text-sm text-gray-400 font-medium">Lekcja 14</p>
+                                       <h3 class="text-lg font-semibold text-white mt-1">Wielouzytkownicza Chmura Plików</h3>
+                                       <p class="text-gray-400 mt-2 text-sm">Wydzielone katalogi użytkowników (/cloud/users/marcin). System uprawnień i limitów dyskowych. Wysyłanie/pobieranie przez interfejs webowy.</p>
+                                       <p class="text-gray-500 mt-2 text-xs">Cel: Prywatna chmura z zarządzaniem użytkownikami</p>
+                                   </div>
+                               </div>
+
+                               <div class="relative timeline-item future-item pb-6">
+                                   <div class="glass-card rounded-lg p-4 border-gray-600">
+                                       <p class="text-sm text-gray-400 font-medium">Lekcja 15</p>
+                                       <h3 class="text-lg font-semibold text-white mt-1">Stylowanie i Integracja Menedżera Plików</h3>
+                                       <p class="text-gray-400 mt-2 text-sm">Własne style CSS dla FileBrowser (szkło jak dashboard). Branding GINGERITY.SPACE. Integracja z systemem logowania dashboardu.</p>
+                                       <p class="text-gray-500 mt-2 text-xs">Cel: Spójny wygląd i ujednolicone logowanie</p>
+                                   </div>
+                               </div>
+
+                               <div class="relative timeline-item future-item pb-6">
+                                   <div class="glass-card rounded-lg p-4 border-gray-600">
+                                       <p class="text-sm text-gray-400 font-medium">Lekcja 16</p>
+                                       <h3 class="text-lg font-semibold text-white mt-1">Infrastruktura jako Kod</h3>
+                                       <p class="text-gray-400 mt-2 text-sm">Kontenery Docker dla aplikacji. Orkiestracja Docker Compose. Automatyczne testowanie przywracania kopii zapasowych.</p>
+                                       <p class="text-gray-500 mt-2 text-xs">Cel: Skalowanie i odtwarzalność</p>
+                                   </div>
+                               </div>
+                    
+                               <div class="relative timeline-item future-item pb-6">
+                                   <div class="glass-card rounded-lg p-4 border-dashed border-gray-500">
+                                       <p class="text-sm text-gray-400 font-medium">Zaawansowane</p>
+                                       <h3 class="text-lg font-semibold text-white mt-1">Funkcje Eksperckie</h3>
+                                       <p class="text-gray-400 mt-2 text-sm">Sztuczna inteligencja na brzegu sieci, mobilna aplikacja webowa, automatyzacja inteligentnego domu, orkiestracja Kubernetes.</p>
+                                       <p class="text-gray-500 mt-2 text-xs">Cel: Ekspertyza na poziomie seniora</p>
                                    </div>
                                </div>
                            </div>
@@ -277,6 +323,7 @@ body {
             </div>
         </div>
 
+        <!-- Footer Section -->
         <div class="footer-section">
             <div class="max-w-7xl mx-auto">
                 <footer class="text-center text-gray-500 text-sm">
